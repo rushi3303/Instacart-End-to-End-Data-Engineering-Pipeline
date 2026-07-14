@@ -1,0 +1,33 @@
+# Full Dataset
+data/source/csv/
+
+# Keep sample dataset
+!sample_data/
+!sample_data/*.csv
+
+# Database
+database/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual Environment
+.venv/
+venv/
+
+# VS Code
+.vscode/
+
+# Logs
+logs/
+airflow/logs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+**/.env
