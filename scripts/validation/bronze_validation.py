@@ -1,8 +1,11 @@
-import pandas as pd
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from urllib.parse import quote_plus
 
 from config.db_config import DB_CONFIG
+
+# ==========================================================
+# Database Connection
+# ==========================================================
 
 password = quote_plus(DB_CONFIG["password"])
 
@@ -11,40 +14,105 @@ engine = create_engine(
     f"{DB_CONFIG['host']}:{DB_CONFIG['port']}/{DB_CONFIG['database']}"
 )
 
-tables = [
-    "aisles",
-    "departments",
-    "products",
-    "orders",
-    "order_products__prior",
-    "order_products__train"
-]
+# ==========================================================
+# Tables & Primary Keys
+# ==========================================================
 
-for table in tables:
+TABLES = {
+    "aisles": ["aisle_id"],
+    "departments": ["department_id"],
+    "products": ["product_id"],
+    "orders": ["order_id"],
+    "order_products__prior": ["order_id", "product_id"],
+    "order_products__train": ["order_id", "product_id"]
+}
 
-    print("\n" + "=" * 60)
-    print(f"Table : {table}")
+# ==========================================================
+# Bronze Validation
+# ==========================================================
 
-    # Row Count
-    row_count = pd.read_sql(
-        f"SELECT COUNT(*) AS total_rows FROM bronze.{table}",
-        engine
-    )
-    print(row_count)
+with engine.connect() as conn:
 
-    # First 5 Rows
-    sample = pd.read_sql(
-        f"SELECT * FROM bronze.{table} LIMIT 5",
-        engine
-    )
-    print(sample)
+    for table, pk in TABLES.items():
 
-    # Null Values
-    print("\nNull Values")
-    print(sample.isnull().sum())
+        print("\n" + "=" * 80)
+        print(f"Table : {table}")
 
-    # Columns
-    print("\nColumns")
-    print(sample.columns.tolist())
+        # --------------------------------------------------
+        # Row Count
+        # --------------------------------------------------
 
-print("\n Bronze Validation Completed")
+        total_rows = conn.execute(
+            text(f"SELECT COUNT(*) FROM bronze.{table};")
+        ).scalar()
+
+        print(f"\nTotal Rows : {total_rows}")
+
+        # --------------------------------------------------
+        # Null Check
+        # --------------------------------------------------
+
+        null_condition = " OR ".join([f"{col} IS NULL" for col in pk])
+
+        null_rows = conn.execute(
+            text(f"""
+                SELECT COUNT(*)
+                FROM bronze.{table}
+                WHERE {null_condition};
+            """)
+        ).scalar()
+
+        print(f"Null Rows : {null_rows}")
+
+        # --------------------------------------------------
+        # Duplicate Check
+        # --------------------------------------------------
+
+        partition_cols = ", ".join(pk)
+
+        duplicate_rows = conn.execute(
+            text(f"""
+                SELECT COUNT(*)
+                FROM
+                (
+                    SELECT
+                        ROW_NUMBER() OVER(
+                            PARTITION BY {partition_cols}
+                        ) AS rn
+                    FROM bronze.{table}
+                ) t
+                WHERE rn > 1;
+            """)
+        ).scalar()
+
+        print(f"Duplicate Rows : {duplicate_rows}")
+
+        # --------------------------------------------------
+        # Top 5 Rows
+        # --------------------------------------------------
+
+        print("\nTop 5 Rows\n")
+
+        result = conn.execute(
+            text(f"""
+                SELECT *
+                FROM bronze.{table}
+                LIMIT 5;
+            """)
+        )
+
+        for row in result:
+            print(row)
+
+        # --------------------------------------------------
+        # Validation Status
+        # --------------------------------------------------
+
+        if null_rows == 0 and duplicate_rows == 0:
+            print("\nValidation Status : PASSED ✅")
+        else:
+            print("\nValidation Status : FAILED ❌")
+
+print("\n" + "=" * 80)
+print("Bronze Validation Completed Successfully")
+print("=" * 80)

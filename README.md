@@ -1,42 +1,32 @@
-# End-to-End Data Engineering Pipeline using PostgreSQL, Airflow & Power BI
+# Instacart End-to-End Data Engineering Pipeline
 
 ## Project Overview
 
-This project demonstrates an End-to-End Data Engineering Pipeline using the Instacart Dataset.
-
-The pipeline loads raw CSV files into PostgreSQL, transforms the data through Bronze, Silver and Gold layers, automates ETL using Apache Airflow running on Docker, and visualizes business insights using Power BI.
+This project implements an End-to-End Data Engineering Pipeline using the Instacart Dataset. The pipeline follows the Medallion Architecture (Bronze, Silver, Gold) and is orchestrated using Apache Airflow running on Docker with CeleryExecutor. PostgreSQL is used as the data warehouse, and Power BI is used for business reporting and visualization.
 
 ---
 
-## Project Architecture
+## Architecture
 
 ```
-CSV Files
-    │
-    ▼
-Python ETL Scripts
-    │
-    ▼
-Bronze Layer
-    │
-    ▼
-Silver Layer
-    │
-    ▼
-Gold Layer
-    │
-    ▼
-Power BI Dashboard
-
-Airflow
-    │
-    ▼
-Automates Complete ETL Pipeline
-
-Docker
-    │
-    ▼
-Runs Airflow Services
+                    Instacart CSV Files
+                            │
+                            ▼
+                  Apache Airflow (DAG)
+                            │
+                            ▼
+                  Python ETL Pipeline
+                            │
+         ┌──────────────────┼──────────────────┐
+         ▼                  ▼                  ▼
+     Bronze Layer      Silver Layer      Gold Layer
+         │                  │                  │
+         └──────────────────┼──────────────────┘
+                            ▼
+                     PostgreSQL Database
+                            │
+                            ▼
+                     Power BI Dashboard
 ```
 
 ---
@@ -47,121 +37,195 @@ Runs Airflow Services
 - PostgreSQL
 - Apache Airflow
 - Docker
-- Power BI
+- Redis
 - SQLAlchemy
 - Pandas
-- Git & GitHub
+- Power BI
+- Git
+- GitHub
 
 ---
 
 ## Project Structure
 
 ```
-Data_Engineering_project/
+Instacart-End-to-End-Data-Engineering-Pipeline
 
-│
 ├── airflow/
+│   └── dags/
 ├── config/
-├── data/
-│   └── source/
-│       └── csv/
-│
 ├── docker/
+├── sample_data/
 ├── scripts/
+│   ├── ingestion/
 │   ├── load/
 │   ├── transformation/
+│   ├── validation/
 │   ├── metadata/
-│   └── audit/
-│
-├── dashboard/
-├── logs/
-└── requirements.txt
+│   ├── audit/
+│   └── logging/
+├── README.md
+├── requirements.txt
+└── .gitignore
 ```
 
 ---
 
-## ETL Flow
+## Pipeline Workflow
 
-### Bronze Layer
+### Step 1 – Data Ingestion
 
-- Loads raw CSV files into PostgreSQL.
-- Uses chunk processing for large files.
-- Skip logic avoids reloading tables that already contain data.
-
----
-
-### Silver Layer
-
-- Cleans raw data.
-- Removes unnecessary columns.
-- Creates transformed tables.
+- Read Instacart CSV files
+- Load raw data into PostgreSQL Bronze schema
+- Chunk-based loading for better performance
+- Skip already loaded tables
 
 ---
 
-### Gold Layer
+### Step 2 – Bronze Layer
 
-- Creates business-ready tables.
-- Used as the source for Power BI Dashboard.
+- Stores raw data
+- No transformation
+- Maintains original dataset
 
 ---
 
-## Airflow Pipeline
+### Step 3 – Silver Layer
+
+- Data Cleaning
+- Remove duplicates
+- Handle NULL values
+- Trim text columns
+- Apply business validation rules
+- Create cleaned tables
+
+---
+
+### Step 4 – Gold Layer
+
+- Business-ready tables
+- Optimized for reporting
+- Used by Power BI
+
+---
+
+## ETL Pipeline
 
 ```
-load_to_bronze
-        │
-        ▼
-bronze_to_silver
-        │
-        ▼
-silver_to_gold
+CSV Files
+     │
+     ▼
+load_to_bronze.py
+     │
+     ▼
+bronze_to_silver.py
+     │
+     ▼
+incremental_load.py
+     │
+     ▼
+gold tables
+     │
+     ▼
+Power BI Dashboard
 ```
 
-The pipeline is executed automatically using Apache Airflow.
+---
+
+## Features
+
+- Medallion Architecture
+- Bronze Layer
+- Silver Layer
+- Gold Layer
+- Apache Airflow DAG
+- Docker Compose Setup
+- PostgreSQL Database
+- Redis Queue
+- CeleryExecutor
+- Incremental Loading
+- SCD Type 1
+- SCD Type 2
+- Data Validation
+- Metadata Framework
+- Audit Framework
+- Logging
+- Power BI Dashboard
+
+---
+
+## Database Schemas
+
+- Bronze
+- Silver
+- Gold
+- Audit
+- Metadata
+
+---
+
+## Airflow Components
+
+- Webserver
+- Scheduler
+- Worker
+- Triggerer
+- PostgreSQL
+- Redis
 
 ---
 
 ## Power BI Dashboard
 
-Dashboard is connected to Gold Layer tables.
+The dashboard provides:
 
-Dashboard provides:
-
-- Sales Analysis
+- Customer Insights
 - Product Analysis
 - Department Analysis
+- Order Analysis
 - KPI Cards
-- Interactive Charts
+- Interactive Reports
+
+## Project Screenshots
+
+## Airflow DAG
+
+![Airflow DAG](images/airflow_dag.png)
 
 ---
 
-## Features Implemented
+## Docker Containers
 
-- Bronze Layer
-- Silver Layer
-- Gold Layer
-- Docker Setup
-- Airflow DAG
-- PostgreSQL Database
-- Skip Logic for Bronze Loading
-- Incremental Product Dimension Load
-- Power BI Dashboard
+![Docker Containers](images/docker_containers.png)
 
 ---
 
-## Future Enhancements
+## PostgreSQL Schemas
 
-- Metadata Framework
-- Audit Framework
-- Full Incremental Loading
-- Automatic Dashboard Refresh
-- Environment Variables
-- Logging Improvements
+![PostgreSQL Schemas](images/postgres_schema.png)
+
+---
+
+## Power BI Dashboard
+
+![Power BI Dashboard](images/powerbi_dashboard.png)
+
+## Future Improvements
+
+- AWS S3 Integration
+- Snowflake Integration
+- Kafka Streaming
+- CI/CD Pipeline
+- Unit Testing
+- Data Quality Monitoring
+- Dockerized ETL Pipeline
 
 ---
 
 ## Author
 
-Rushikesh Sudam Bhosale
+**Rushikesh Sudam Bhosale**
 
-Data Engineering Internship Project
+**GitHub:** https://github.com/rushi3303
+
+**LinkedIn:** https://www.linkedin.com/in/rushikeshbhosale
