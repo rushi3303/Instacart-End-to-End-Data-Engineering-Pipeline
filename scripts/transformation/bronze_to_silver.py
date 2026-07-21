@@ -6,6 +6,8 @@ from sqlalchemy import create_engine, text
 
 from config.db_config import DB_CONFIG
 
+from scripts.audit.audit_framework import run_etl_step
+
 
 # =====================================================
 # Logging Configuration
@@ -253,13 +255,11 @@ def clean_train(conn):
 
     logging.info("order_products__train completed.")
 
-    # =====================================================
+ # =====================================================
 # Main Function
 # =====================================================
 
 def main():
-
-    start_time = time.time()
 
     try:
 
@@ -270,25 +270,62 @@ def main():
 
             create_silver_schema(conn)
 
-            clean_aisles(conn)
+            run_etl_step(
+                conn=conn,
+                pipeline_name="Instacart_ETL",
+                layer_name="Silver",
+                table_name="aisles",
+                schema_name="silver",
+                etl_function=clean_aisles
+            )
 
-            clean_departments(conn)
+            run_etl_step(
+                conn=conn,
+                pipeline_name="Instacart_ETL",
+                layer_name="Silver",
+                table_name="departments",
+                schema_name="silver",
+                etl_function=clean_departments
+            )
 
-            clean_products(conn)
+            run_etl_step(
+                conn=conn,
+                pipeline_name="Instacart_ETL",
+                layer_name="Silver",
+                table_name="products",
+                schema_name="silver",
+                etl_function=clean_products
+            )
 
-            clean_orders(conn)
+            run_etl_step(
+                conn=conn,
+                pipeline_name="Instacart_ETL",
+                layer_name="Silver",
+                table_name="orders",
+                schema_name="silver",
+                etl_function=clean_orders
+            )
 
-            clean_prior(conn)
+            run_etl_step(
+                conn=conn,
+                pipeline_name="Instacart_ETL",
+                layer_name="Silver",
+                table_name="order_products__prior",
+                schema_name="silver",
+                etl_function=clean_prior
+            )
 
-            clean_train(conn)
-
-            end_time = time.time()
-
-            execution_time = round(end_time - start_time, 2)
+            run_etl_step(
+                conn=conn,
+                pipeline_name="Instacart_ETL",
+                layer_name="Silver",
+                table_name="order_products__train",
+                schema_name="silver",
+                etl_function=clean_train
+            )
 
             logging.info("=" * 60)
             logging.info("Silver Layer Completed Successfully")
-            logging.info(f"Execution Time : {execution_time} Seconds")
             logging.info("=" * 60)
 
     except Exception as e:
@@ -297,6 +334,8 @@ def main():
         logging.error("Bronze → Silver Transformation Failed")
         logging.error(e)
         logging.error("=" * 60)
+
+
 
 
 # =====================================================

@@ -1,10 +1,13 @@
 import logging
-import time
+
 from urllib.parse import quote_plus
 
 from sqlalchemy import create_engine, text
 
 from config.db_config import DB_CONFIG
+
+
+from scripts.audit.audit_framework import run_etl_step
 
 logging.basicConfig(
     level=logging.INFO,
@@ -47,7 +50,6 @@ def create_product_dimension(conn):
         CREATE TABLE gold.product_dimension AS
 
         SELECT
-
             p.product_id,
             p.product_name,
             a.aisle,
@@ -63,19 +65,14 @@ def create_product_dimension(conn):
 
     """))
 
-    
-
     logging.info("Product Dimension Created Successfully")
-
 
 # =====================================================
 # Main Function
 # =====================================================
 
 def main():
-
-    start_time = time.time()
-
+    
     try:
 
         with engine.begin() as conn:
@@ -85,23 +82,46 @@ def main():
 
             create_gold_schema(conn)
 
-            create_product_dimension(conn)
+            run_etl_step(
+                conn=conn,
+                pipeline_name="Instacart_ETL",
+                layer_name="Gold",
+                table_name="product_dimension",
+                schema_name="gold",
+                etl_function=create_product_dimension
+            )
 
-            create_order_fact(conn)
+            run_etl_step(
+                conn=conn,
+                pipeline_name="Instacart_ETL",
+                layer_name="Gold",
+                table_name="order_fact",
+                schema_name="gold",
+                etl_function=create_order_fact
+            )
 
-            create_customer_summary(conn)
+            run_etl_step(
+                conn=conn,
+                pipeline_name="Instacart_ETL",
+                layer_name="Gold",
+                table_name="customer_summary",
+                schema_name="gold",
+                etl_function=create_customer_summary
+            )
 
-            create_sales_summary(conn)
+            run_etl_step(
+               conn=conn,
+               pipeline_name="Instacart_ETL",
+               layer_name="Gold",
+               table_name="sales_summary",
+              schema_name="gold",
+               etl_function=create_sales_summary
+)
 
-            
 
-            end_time = time.time()
-
-            execution_time = round(end_time-start_time,2)
 
             logging.info("=" * 60)
             logging.info("Gold Layer Completed Successfully")
-            logging.info(f"Execution Time : {execution_time} Seconds")
             logging.info("=" * 60)
 
     except Exception as e:
@@ -150,11 +170,7 @@ def create_order_fact(conn):
 
     """))
 
-    
-
-    logging.info("Order Fact Table Created Successfully")   
-
-
+    logging.info("Order Fact Table Created Successfully")
 
 # =====================================================
 # Customer Summary
@@ -182,10 +198,7 @@ def create_customer_summary(conn):
 
     """))
 
-    
-
-    logging.info("Customer Summary Created Successfully") 
-
+    logging.info("Customer Summary Created Successfully")
 
 # =====================================================
 # Sales Summary
@@ -218,10 +231,7 @@ def create_sales_summary(conn):
 
     """))
 
-    
-
     logging.info("Sales Summary Created Successfully")
-
 
 # =====================================================
 # Driver Code

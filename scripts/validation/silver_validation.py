@@ -3,6 +3,10 @@ from urllib.parse import quote_plus
 
 from config.db_config import DB_CONFIG
 
+# ==========================================================
+# Database Connection
+# ==========================================================
+
 password = quote_plus(DB_CONFIG["password"])
 
 engine = create_engine(
@@ -10,71 +14,105 @@ engine = create_engine(
     f"{DB_CONFIG['host']}:{DB_CONFIG['port']}/{DB_CONFIG['database']}"
 )
 
-tables = [
-    "aisles",
-    "departments",
-    "products",
-    "orders",
-    "order_products__prior",
-    "order_products__train"
-]
+# ==========================================================
+# Tables & Primary Keys
+# ==========================================================
+
+TABLES = {
+    "aisles": ["aisle_id"],
+    "departments": ["department_id"],
+    "products": ["product_id"],
+    "orders": ["order_id"],
+    "order_products__prior": ["order_id", "product_id"],
+    "order_products__train": ["order_id", "product_id"]
+}
+
+# ==========================================================
+# Validation
+# ==========================================================
 
 with engine.connect() as conn:
 
-    for table in tables:
+    for table, pk in TABLES.items():
 
-        print("\n" + "=" * 70)
+        print("\n" + "=" * 80)
         print(f"Table : {table}")
 
-        # -------------------------
+        # --------------------------------------------------
         # Row Count
-        # -------------------------
-        result = conn.execute(text(f"""
-            SELECT COUNT(*)
-            FROM silver.{table};
-        """))
+        # --------------------------------------------------
 
-        print("\nTotal Rows :", result.scalar())
+        total_rows = conn.execute(
+            text(f"SELECT COUNT(*) FROM silver.{table};")
+        ).scalar()
 
-        # -------------------------
+        print(f"\nTotal Rows : {total_rows}")
+
+        # --------------------------------------------------
+        # Null Check
+        # --------------------------------------------------
+
+        null_condition = " OR ".join([f"{col} IS NULL" for col in pk])
+
+        null_rows = conn.execute(
+            text(f"""
+                SELECT COUNT(*)
+                FROM silver.{table}
+                WHERE {null_condition};
+            """)
+        ).scalar()
+
+        print(f"Null Rows : {null_rows}")
+
+        # --------------------------------------------------
         # Duplicate Check
-        # -------------------------
-        duplicate_query = f"""
+        # --------------------------------------------------
 
-        SELECT COUNT(*)
+        partition_cols = ", ".join(pk)
 
-        FROM (
+        duplicate_rows = conn.execute(
+            text(f"""
+                SELECT COUNT(*)
+                FROM
+                (
+                    SELECT
+                        ROW_NUMBER() OVER(
+                            PARTITION BY {partition_cols}
+                        ) AS rn
+                    FROM silver.{table}
+                ) t
+                WHERE rn > 1;
+            """)
+        ).scalar()
 
-            SELECT *,
-            COUNT(*) OVER(PARTITION BY *)
+        print(f"Duplicate Rows : {duplicate_rows}")
 
-            FROM silver.{table}
+        # --------------------------------------------------
+        # Top 5 Rows
+        # --------------------------------------------------
 
-        ) t
+        print("\nTop 5 Rows\n")
 
-        WHERE count > 1;
-
-        """
-
-        print("\nDuplicate Check : Skipped (Large Table)")
-
-        # -------------------------
-        # Sample Data
-        # -------------------------
-
-        result = conn.execute(text(f"""
-
-            SELECT *
-
-            FROM silver.{table}
-
-            LIMIT 5;
-
-        """))
-
-        print("\nTop 5 Rows")
+        result = conn.execute(
+            text(f"""
+                SELECT *
+                FROM silver.{table}
+                LIMIT 5;
+            """)
+        )
 
         for row in result:
             print(row)
 
-print("\n Silver Validation Completed Successfully")
+        # --------------------------------------------------
+        # Validation Status
+        # --------------------------------------------------
+
+        if null_rows == 0 and duplicate_rows == 0:
+            print("\nValidation Status : PASSED ✅")
+        else:
+            print("\nValidation Status : FAILED ❌")
+
+print("\n" + "=" * 80)
+print("Silver Validation Completed Successfully")
+print("=" * 80)
