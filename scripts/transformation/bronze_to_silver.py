@@ -1,5 +1,5 @@
 import logging
-import time
+
 from urllib.parse import quote_plus
 
 from sqlalchemy import create_engine, text

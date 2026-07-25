@@ -1,192 +1,301 @@
-# Instacart End-to-End Data Engineering Pipeline
+# 🚀 Instacart End-to-End Data Engineering Pipeline
 
-## Project Overview
-
-This project implements an End-to-End Data Engineering Pipeline using the Instacart Dataset. The pipeline follows the Medallion Architecture (Bronze, Silver, Gold) and is orchestrated using Apache Airflow running on Docker with CeleryExecutor. PostgreSQL is used as the data warehouse, and Power BI is used for business reporting and visualization.
+A production-style End-to-End Data Engineering Pipeline built using the Instacart Dataset following the **Medallion Architecture (Bronze → Silver → Gold)**. The project demonstrates scalable ETL processing, metadata-driven incremental loading, audit logging, Apache Airflow orchestration, PostgreSQL data warehousing, and Power BI reporting.
 
 ---
 
-## Architecture
+# 📌 Project Overview
+
+This project simulates a real-world Data Engineering workflow by ingesting raw Instacart CSV files into PostgreSQL and transforming them into analytics-ready datasets.
+
+The pipeline includes:
+
+- Raw Data Ingestion
+- Incremental Bronze Loading
+- Metadata-Based File Tracking
+- Data Cleaning & Validation
+- Business Transformation
+- Audit Logging
+- Airflow Orchestration
+- Power BI Reporting
+
+---
+
+# 🏗️ Architecture
 
 ```
-                    Instacart CSV Files
-                            │
-                            ▼
-                  Apache Airflow (DAG)
-                            │
-                            ▼
+                     Instacart CSV Files
+                             │
+                             ▼
+                  Apache Airflow Scheduler
+                             │
+                             ▼
                   Python ETL Pipeline
-                            │
-         ┌──────────────────┼──────────────────┐
-         ▼                  ▼                  ▼
-     Bronze Layer      Silver Layer      Gold Layer
-         │                  │                  │
-         └──────────────────┼──────────────────┘
-                            ▼
-                     PostgreSQL Database
-                            │
-                            ▼
-                     Power BI Dashboard
+                             │
+        ┌──────────────────────────────────────┐
+        │                                      │
+        ▼                                      ▼
+ Bronze Layer                           Metadata Layer
+ (Raw Data)                          (File Tracking)
+        │
+        ▼
+ Silver Layer
+ (Clean & Validated Data)
+        │
+        ▼
+ Gold Layer
+ (Business Ready Tables)
+        │
+        ▼
+ PostgreSQL Data Warehouse
+        │
+        ▼
+      Power BI Dashboard
 ```
 
 ---
 
-## Technology Stack
+# ⚙️ Technology Stack
 
-- Python
-- PostgreSQL
-- Apache Airflow
-- Docker
-- Redis
-- SQLAlchemy
-- Pandas
-- Power BI
-- Git
-- GitHub
+| Category | Technologies |
+|----------|--------------|
+| Language | Python |
+| Database | PostgreSQL |
+| Workflow Orchestration | Apache Airflow |
+| Containerization | Docker |
+| Message Broker | Redis |
+| Data Processing | Pandas |
+| ORM | SQLAlchemy |
+| Reporting | Power BI |
+| Version Control | Git & GitHub |
 
 ---
 
-## Project Structure
+# 📂 Project Structure
 
 ```
 Instacart-End-to-End-Data-Engineering-Pipeline
 
+│
 ├── airflow/
 │   └── dags/
+│
 ├── config/
-├── docker/
-├── sample_data/
+│
+├── data/
+│   └── source/
+│       └── csv/
+│
 ├── scripts/
-│   ├── ingestion/
 │   ├── load/
 │   ├── transformation/
-│   ├── validation/
-│   ├── metadata/
 │   ├── audit/
+│   ├── metadata/
+│   ├── validation/
 │   └── logging/
-├── README.md
+│
+├── docker/
+│
+├── images/
+│
 ├── requirements.txt
-└── .gitignore
+│
+└── README.md
 ```
 
 ---
 
-## Pipeline Workflow
-
-### Step 1 – Data Ingestion
-
-- Read Instacart CSV files
-- Load raw data into PostgreSQL Bronze schema
-- Chunk-based loading for better performance
-- Skip already loaded tables
-
----
-
-### Step 2 – Bronze Layer
-
-- Stores raw data
-- No transformation
-- Maintains original dataset
-
----
-
-### Step 3 – Silver Layer
-
-- Data Cleaning
-- Remove duplicates
-- Handle NULL values
-- Trim text columns
-- Apply business validation rules
-- Create cleaned tables
-
----
-
-### Step 4 – Gold Layer
-
-- Business-ready tables
-- Optimized for reporting
-- Used by Power BI
-
----
-
-## ETL Pipeline
+# 🔄 ETL Workflow
 
 ```
 CSV Files
-     │
-     ▼
-load_to_bronze.py
-     │
-     ▼
-bronze_to_silver.py
-     │
-     ▼
-incremental_load.py
-     │
-     ▼
-gold tables
-     │
-     ▼
+    │
+    ▼
+Load to Bronze
+    │
+    ▼
+Metadata Validation
+(File Modified + File Size)
+    │
+    ▼
+Skip Unchanged Files
+    │
+    ▼
+Bronze Layer
+    │
+    ▼
+Silver Layer
+    │
+    ▼
+Gold Layer
+    │
+    ▼
 Power BI Dashboard
 ```
 
 ---
 
-## Features
+# 🥉 Bronze Layer
+
+### Features
+
+- Raw Data Storage
+- Chunk-based CSV Loading
+- Dynamic Primary Key Detection
+- ON CONFLICT DO NOTHING
+- Metadata-based Incremental Loading
+- File Timestamp Validation
+- File Size Validation
+- Skip Unchanged Files
+- Production Logging
+
+---
+
+# 🥈 Silver Layer
+
+### Features
+
+- Data Cleaning
+- Remove Duplicate Records
+- NULL Handling
+- Text Standardization
+- Business Rule Validation
+- Data Quality Checks
+
+---
+
+# 🥇 Gold Layer
+
+Business-ready analytical tables:
+
+- Product Dimension
+- Order Fact
+- Customer Summary
+- Sales Summary
+
+Optimized for BI reporting.
+
+---
+
+# 📊 Metadata Framework
+
+Metadata Schema maintains:
+
+- File Name
+- Last Modified Timestamp
+- File Size
+- Last Loaded Timestamp
+- Load Status
+
+This enables incremental processing and prevents unnecessary data loading.
+
+---
+
+# 📋 Audit Framework
+
+The Audit Layer tracks:
+
+- Pipeline Name
+- Layer Name
+- Table Name
+- Start Time
+- End Time
+- Execution Status
+- Execution Duration
+
+---
+
+# ⚡ Incremental Loading Strategy
+
+The Bronze Layer implements metadata-driven incremental loading.
+
+### Workflow
+
+```
+Read CSV Metadata
+        │
+        ▼
+Compare
+
+Last Modified Time
++
+File Size
+
+        │
+        ▼
+File Changed?
+
+     Yes ─────────► Load Bronze
+
+     No ──────────► Skip File
+```
+
+Benefits
+
+- Faster Execution
+- Reduced Database Load
+- No Duplicate Records
+- Production-style Processing
+
+---
+
+# 🎯 Key Features
 
 - Medallion Architecture
-- Bronze Layer
-- Silver Layer
-- Gold Layer
-- Apache Airflow DAG
-- Docker Compose Setup
-- PostgreSQL Database
-- Redis Queue
-- CeleryExecutor
-- Incremental Loading
-- SCD Type 1
-- SCD Type 2
-- Data Validation
-- Metadata Framework
+- Incremental Bronze Loading
+- Metadata-driven File Tracking
+- Skip Logic
+- Dynamic Primary Key Detection
+- Chunk-based Processing
 - Audit Framework
-- Logging
+- Data Validation
+- Logging Framework
+- Airflow DAG Orchestration
+- Dockerized Deployment
+- PostgreSQL Data Warehouse
 - Power BI Dashboard
 
 ---
 
-## Database Schemas
+# 🗄️ Database Schemas
 
 - Bronze
 - Silver
 - Gold
-- Audit
 - Metadata
+- Audit
 
 ---
 
-## Airflow Components
+# 🔄 Airflow Pipeline
 
-- Webserver
-- Scheduler
-- Worker
-- Triggerer
-- PostgreSQL
-- Redis
+```
+Load to Bronze
+        │
+        ▼
+Bronze to Silver
+        │
+        ▼
+Silver to Gold
+```
 
 ---
 
-## Power BI Dashboard
+# 📈 Power BI Dashboard
 
-The dashboard provides:
+The dashboard includes:
 
+- Sales Overview
+- Department Analysis
 - Customer Insights
 - Product Analysis
-- Department Analysis
-- Order Analysis
+- Order Trends
 - KPI Cards
-- Interactive Reports
+- Interactive Filters
 
-## Project Screenshots
+---
+
+# 📸 Project Screenshots
 
 ## Airflow DAG
 
@@ -196,33 +305,37 @@ The dashboard provides:
 
 ## Docker Containers
 
-![Docker Containers](images/docker_containers.png)
+![Docker](images/docker_containers.png)
 
 ---
 
 ## PostgreSQL Schemas
 
-![PostgreSQL Schemas](images/postgres_schema.png)
+![PostgreSQL](images/postgres_schema.png)
 
 ---
 
 ## Power BI Dashboard
 
-![Power BI Dashboard](images/powerbi_dashboard.png)
-
-## Future Improvements
-
-- AWS S3 Integration
-- Snowflake Integration
-- Kafka Streaming
-- CI/CD Pipeline
-- Unit Testing
-- Data Quality Monitoring
-- Dockerized ETL Pipeline
+![Power BI](images/powerbi_dashboard.png)
 
 ---
 
-## Author
+# 🚀 Future Enhancements
+
+- AWS S3 Integration
+- Azure Data Factory
+- Snowflake Data Warehouse
+- Apache Kafka Streaming
+- CI/CD Pipeline
+- Data Quality Monitoring
+- Unit Testing
+- Email Alerts
+- Cloud Deployment
+
+---
+
+# 👨‍💻 Author
 
 **Rushikesh Sudam Bhosale**
 

@@ -1,7 +1,9 @@
+import os
+
 DB_CONFIG = {
-    "host":"host.docker.internal",
-    "port": "5432",
-    "database": "instacart_de",
-    "user": "postgres",
-    "password": "Rushi@3303"
+    "host": os.getenv("DB_HOST", "localhost"),
+    "port": int(os.getenv("DB_PORT", "5432")),
+    "database": os.getenv("DB_NAME", "instacart_de"),
+    "user": os.getenv("DB_USER", "postgres"),
+    "password": os.getenv("DB_PASSWORD", "Rushi@3303")
 }
