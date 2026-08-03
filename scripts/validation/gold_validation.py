@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine, text
 from urllib.parse import quote_plus
+import time
 
 from config.db_config import DB_CONFIG
 
@@ -29,12 +30,18 @@ TABLES = {
 # Gold Validation
 # ==========================================================
 
+start_time = time.time()
+
+passed = 0
+failed = 0
+
 with engine.connect() as conn:
 
     for table, pk in TABLES.items():
 
-        print("\n" + "=" * 80)
-        print(f"Table : {table}")
+        print("\n" + "=" * 90)
+        print(f"TABLE : {table.upper()}")
+        print("=" * 90)
 
         # --------------------------------------------------
         # Row Count
@@ -44,13 +51,20 @@ with engine.connect() as conn:
             text(f"SELECT COUNT(*) FROM gold.{table};")
         ).scalar()
 
-        print(f"\nTotal Rows : {total_rows}")
+        print(f"Total Rows : {total_rows}")
+
+        if total_rows == 0:
+            print("Table Status : EMPTY ")
+        else:
+            print("Table Status : OK ")
 
         # --------------------------------------------------
         # Null Check
         # --------------------------------------------------
 
-        null_condition = " OR ".join([f"{col} IS NULL" for col in pk])
+        null_condition = " OR ".join(
+            [f"{col} IS NULL" for col in pk]
+        )
 
         null_rows = conn.execute(
             text(f"""
@@ -69,22 +83,111 @@ with engine.connect() as conn:
         partition_cols = ", ".join(pk)
 
         duplicate_rows = conn.execute(
-            text(f"""
-                SELECT COUNT(*)
-                FROM
-                (
-                    SELECT
-                        ROW_NUMBER() OVER(
-                            PARTITION BY {partition_cols}
-                        ) AS rn
-                    FROM gold.{table}
-                ) t
-                WHERE rn > 1;
-            """)
+           text(f"""
+               SELECT COUNT(*)
+               FROM
+               (
+                   SELECT
+                       {partition_cols}
+                   FROM gold.{table}
+                   GROUP BY {partition_cols}
+                   HAVING COUNT(*) > 1
+                ) t;
+             """)
         ).scalar()
 
         print(f"Duplicate Rows : {duplicate_rows}")
 
+        # --------------------------------------------------
+        # Metadata Validation
+        # --------------------------------------------------
+
+        metadata = conn.execute(
+            text("""
+                SELECT
+                    last_processed_key,
+                    status
+                FROM metadata.incremental_tracking
+                WHERE layer_name='gold'
+                AND table_name=:table;
+            """),
+            {
+                "table": table
+            }
+        ).fetchone()
+
+        if metadata:
+
+            print(f"Metadata Status      : {metadata.status}")
+            print(f"Last Processed Key   : {metadata.last_processed_key}")
+
+        # --------------------------------------------------
+        # Audit Validation
+        # --------------------------------------------------
+
+        audit = conn.execute(
+            text("""
+                SELECT
+                    status
+                FROM audit.audit_log
+                WHERE table_name=:table
+                ORDER BY end_time DESC
+                LIMIT 1;
+            """),
+            {
+                "table": table
+            }
+        ).scalar()
+
+        print(f"Latest Audit Status  : {audit}")
+
+        # --------------------------------------------------
+        # Row Count Comparison
+        # --------------------------------------------------
+
+        if table == "product_dimension":
+
+            silver_rows = conn.execute(
+                text("""
+                    SELECT COUNT(*)
+                    FROM silver.products;
+                """)
+            ).scalar()
+
+            print(f"Silver product Rows          : {silver_rows}")
+
+        elif table == "order_fact":
+
+            silver_rows = conn.execute(
+                text("""
+                    SELECT COUNT(*)
+                    FROM silver.order_products__prior;
+                """)
+            ).scalar()
+
+            print(f"Silver order Rows            : {silver_rows}")
+
+        elif table == "customer_summary":
+
+            silver_rows = conn.execute(
+                text("""
+                    SELECT COUNT(DISTINCT user_id)
+                    FROM silver.orders;
+                """)
+            ).scalar()
+
+            print(f"Distinct Users               : {silver_rows}")
+
+        elif table == "sales_summary":
+
+            silver_rows = conn.execute(
+                text("""
+                    SELECT COUNT(DISTINCT department_id)
+                    FROM silver.products;
+                 """)
+            ).scalar()
+
+            print(f"Distinct Departments         : {silver_rows}")
         # --------------------------------------------------
         # Top 5 Rows
         # --------------------------------------------------
@@ -106,11 +209,40 @@ with engine.connect() as conn:
         # Validation Status
         # --------------------------------------------------
 
-        if null_rows == 0 and duplicate_rows == 0:
-            print("\nValidation Status : PASSED ✅")
-        else:
-            print("\nValidation Status : FAILED ❌")
+        if (
+            total_rows > 0
+            and null_rows == 0
+            and duplicate_rows == 0
+        ):
 
-print("\n" + "=" * 80)
+            passed += 1
+            print("\nValidation Status : PASSED ")
+
+        else:
+
+            failed += 1
+            print("\nValidation Status : FAILED ")
+
+# ==========================================================
+# Summary
+# ==========================================================
+
+end_time = time.time()
+
+print("\n" + "=" * 90)
+print("VALIDATION SUMMARY")
+print("=" * 90)
+
+print(f"Tables Passed : {passed}")
+print(f"Tables Failed : {failed}")
+
+print(f"\nExecution Time : {round(end_time - start_time,2)} Seconds")
+
+if failed == 0:
+    print("\nOVERALL STATUS : PASSED ")
+else:
+    print("\nOVERALL STATUS : FAILED ")
+
+print("=" * 90)
 print("Gold Validation Completed Successfully")
-print("=" * 80)
+print("=" * 90)

@@ -6,10 +6,18 @@ from sqlalchemy import create_engine, text
 
 from config.db_config import DB_CONFIG
 
+# =====================================================
+# Logging Configuration
+# =====================================================
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s | %(levelname)s | %(message)s"
 )
+
+# =====================================================
+# Database Connection
+# =====================================================
 
 password = quote_plus(DB_CONFIG["password"])
 
@@ -19,24 +27,61 @@ engine = create_engine(
 )
 
 # =====================================================
-# SCD Type 1
+# Production SCD Type 1
 # =====================================================
 
 def scd_type1_product(conn):
 
-    logging.info("Applying SCD Type 1 on Product Dimension...")
+    logging.info("Applying Production SCD Type 1 on Product Dimension...")
 
-    conn.execute(text("""
+    result = conn.execute(
+        text("""
 
-        UPDATE gold.product_dimension
+            UPDATE gold.product_dimension g
 
-        SET product_name = UPPER(product_name);
+            SET
+                product_name = s.product_name,
+                department   = s.department,
+                aisle        = s.aisle
 
-    """))
+            FROM
+            (
+
+                SELECT
+
+                    p.product_id,
+                    p.product_name,
+                    d.department,
+                    a.aisle
+
+                FROM silver.products p
+
+                INNER JOIN silver.departments d
+                    ON p.department_id = d.department_id
+
+                INNER JOIN silver.aisles a
+                    ON p.aisle_id = a.aisle_id
+
+            ) s
+
+            WHERE g.product_id = s.product_id
+
+            AND
+            (
+
+                g.product_name <> s.product_name
+                OR g.department <> s.department
+                OR g.aisle <> s.aisle
+
+            );
+
+        """)
+    )
 
     conn.commit()
 
-    logging.info("SCD Type 1 Applied Successfully")
+    logging.info(f"Rows Updated : {result.rowcount}")
+    logging.info("Production SCD Type 1 Applied Successfully")
 
 
 # =====================================================
@@ -51,26 +96,24 @@ def main():
 
         with engine.connect() as conn:
 
-            logging.info("=" * 60)
-            logging.info("Starting SCD Type 1 Process")
+            logging.info("=" * 70)
+            logging.info("Starting Production SCD Type 1 Process")
 
             scd_type1_product(conn)
 
-            end_time = time.time()
+            execution_time = round(time.time() - start_time, 2)
 
-            execution_time = round(end_time - start_time, 2)
-
-            logging.info("=" * 60)
-            logging.info("SCD Type 1 Completed Successfully")
+            logging.info("=" * 70)
+            logging.info("Production SCD Type 1 Completed Successfully")
             logging.info(f"Execution Time : {execution_time} Seconds")
-            logging.info("=" * 60)
+            logging.info("=" * 70)
 
     except Exception as e:
 
-        logging.error("=" * 60)
-        logging.error("SCD Type 1 Failed")
+        logging.error("=" * 70)
+        logging.error("Production SCD Type 1 Failed")
         logging.error(e)
-        logging.error("=" * 60)
+        logging.error("=" * 70)
 
 
 # =====================================================
