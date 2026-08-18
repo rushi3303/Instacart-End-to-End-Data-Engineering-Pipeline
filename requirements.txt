@@ -4,3 +4,7 @@ numpy
 sqlalchemy
 psycopg2-binary
 python-dotenv
+streamlit
+plotly
+reportlab
+streamlit-mic-recorder

@@ -1,0 +1,376 @@
+[PROJECT OVERVIEW]
+
+This project is an End-to-End Data Engineering Pipeline built using PostgreSQL, Apache Airflow, Python, and the Medallion Architecture.
+
+The project processes Instacart dataset data through multiple stages. The main objective is to ingest raw data, clean and transform it, create analytics-ready datasets, maintain data history, monitor pipeline execution, and provide an Agentic AI interface for interacting with the project.
+
+The project follows the Medallion Architecture:
+
+Bronze Layer -> Silver Layer -> Gold Layer
+
+
+[DATA SOURCE]
+
+The project uses Instacart dataset data.
+
+The dataset contains information related to:
+
+- Orders
+- Order products
+- Products
+- Departments
+- Aisles
+- Customers
+
+The raw dataset is processed through the data engineering pipeline and stored in different layers.
+
+
+[PROJECT ARCHITECTURE]
+
+The project follows an end-to-end architecture.
+
+Data Source
+    ->
+Bronze Layer
+    ->
+Silver Layer
+    ->
+Gold Layer
+    ->
+PostgreSQL Analytics Tables
+    ->
+Agentic AI System
+    ->
+Streamlit User Interface
+
+Apache Airflow is used to orchestrate and manage the ETL pipeline.
+
+
+[BRONZE LAYER]
+
+The Bronze Layer is the raw data ingestion layer.
+
+Its purpose is to load raw data from the source into the data warehouse without major transformations.
+
+The Bronze Layer preserves the original structure of the source data and acts as the first stage of the Medallion Architecture.
+
+Main purpose:
+
+- Raw data ingestion
+- Initial storage
+- Preserve source data
+- Maintain ingestion records
+
+
+[SILVER LAYER]
+
+The Silver Layer contains cleaned and transformed data.
+
+Data from the Bronze Layer is processed to improve data quality.
+
+Typical operations include:
+
+- Removing invalid records
+- Handling missing values
+- Removing duplicates
+- Data type conversion
+- Data validation
+- Data transformation
+
+The Silver Layer produces structured and reliable datasets for analytics.
+
+
+[GOLD LAYER]
+
+The Gold Layer contains analytics-ready datasets.
+
+Data from the Silver Layer is transformed into business-friendly tables.
+
+The Gold Layer is used for:
+
+- Business analytics
+- Reporting
+- Dashboards
+- Customer analysis
+- Product analysis
+- Sales analysis
+
+The Gold Layer is the final layer of the Medallion Architecture.
+
+
+[POSTGRESQL]
+
+PostgreSQL is used as the main database for storing and querying project data.
+
+The project uses PostgreSQL for:
+
+- Bronze tables
+- Silver tables
+- Gold analytics tables
+- Audit logs
+- Data quality information
+
+The Data Agent connects to PostgreSQL to answer questions related to products, customers, sales, ETL history, and data quality.
+
+
+[APACHE AIRFLOW]
+
+Apache Airflow is used to orchestrate the ETL pipeline.
+
+The project contains an Airflow DAG called:
+
+instacart_etl_pipeline
+
+The DAG manages the execution of the pipeline tasks.
+
+The main tasks include:
+
+1. load_to_bronze
+2. bronze_to_silver
+3. silver_to_gold
+4. scd_type1
+5. scd_type2
+
+The pipeline flow is:
+
+load_to_bronze
+    >>
+bronze_to_silver
+    >>
+silver_to_gold
+    >>
+scd_type1
+    >>
+scd_type2
+
+
+[SCD TYPE 1]
+
+Slowly Changing Dimension Type 1 updates existing records.
+
+When a value changes, the old value is overwritten.
+
+Historical values are not maintained.
+
+Example:
+
+Old Product Name:
+Organic Milk
+
+Updated Product Name:
+Organic Whole Milk
+
+The previous value is replaced by the new value.
+
+
+[SCD TYPE 2]
+
+Slowly Changing Dimension Type 2 maintains historical data.
+
+When a value changes:
+
+- The existing record is marked as inactive.
+- A new record is created.
+- Effective dates are maintained.
+
+This allows the system to track historical changes over time.
+
+
+[DATA QUALITY]
+
+Data quality checks are performed during the ETL pipeline.
+
+The checks may include:
+
+- Null value validation
+- Duplicate validation
+- Data type validation
+- Invalid record detection
+- Rejected record monitoring
+
+Data quality information can be retrieved from audit logs and validation results.
+
+
+[AUDIT LOGGING]
+
+The project maintains audit logs for monitoring ETL execution.
+
+The audit information may include:
+
+- Layer name
+- Table name
+- Pipeline status
+- Execution time
+- End time
+- Error message
+
+The audit logs help monitor successful and failed pipeline operations.
+
+
+[AGENTIC AI SYSTEM]
+
+The project includes an Agentic AI system that allows users to interact with the Data Engineering Pipeline using natural language questions.
+
+The Agentic AI system contains three main agents:
+
+1. Support Agent
+2. Data Agent
+3. ML Agent
+
+
+[SUPPORT AGENT]
+
+The Support Agent answers questions related to project knowledge.
+
+It uses a Retrieval-Augmented Generation architecture.
+
+The process is:
+
+Project Knowledge Documents
+    ->
+Document Loader
+    ->
+Chunking
+    ->
+Embeddings
+    ->
+Vector Store
+    ->
+Similarity Search
+    ->
+Relevant Context
+    ->
+Gemini LLM
+    ->
+Final Answer
+
+The Support Agent is responsible for explaining:
+
+- Project architecture
+- Medallion Architecture
+- Bronze Layer
+- Silver Layer
+- Gold Layer
+- PostgreSQL
+- Apache Airflow
+- SCD Type 1
+- SCD Type 2
+- Technologies used in the project
+
+
+[DATA AGENT]
+
+The Data Agent answers questions related to actual project data.
+
+It uses:
+
+- PostgreSQL
+- Apache Airflow
+- Chart recommendation tools
+
+The Data Agent can provide:
+
+- Top products
+- Sales summary
+- Customer summary
+- ETL status
+- ETL history
+- Data quality status
+- Rejected records
+- Airflow DAG information
+- Pipeline execution status
+
+
+[ML AGENT]
+
+The ML Agent is responsible for data analysis and prediction.
+
+It can perform:
+
+- Trend analysis
+- Data analysis
+- Department performance analysis
+- Sales prediction
+- Business insights
+
+The ML Agent is separate from the Gemini LLM.
+
+Gemini is used as the Large Language Model for natural language understanding and answer generation.
+
+The ML Agent performs analytical and predictive tasks using machine learning or data analysis logic.
+
+
+[RAG PIPELINE]
+
+The project uses a Retrieval-Augmented Generation pipeline.
+
+The RAG system contains the following components:
+
+1. document_loader.py
+2. chunker.py
+3. embedding_service.py
+4. vector_store.py
+5. build_index.py
+6. rag_engine.py
+
+The process works as follows:
+
+project_knowledge.txt
+    ->
+Document Loader
+    ->
+Text Chunks
+    ->
+Embedding Model
+    ->
+Vector Embeddings
+    ->
+ChromaDB Vector Store
+
+When a user asks a question:
+
+User Question
+    ->
+Query Embedding
+    ->
+Similarity Search
+    ->
+Top Relevant Chunks
+    ->
+Gemini LLM
+    ->
+Final Answer
+
+
+[LLM SYSTEM]
+
+The project uses Gemini as the Large Language Model.
+
+Gemini is responsible for:
+
+- Understanding natural language questions
+- Supporting agent routing
+- Generating natural language answers
+- Generating answers using retrieved RAG context
+
+The Gemini API is accessed through the modular LLM component of the project.
+
+
+[USER INTERFACE]
+
+Streamlit is used to provide the user interface.
+
+The Streamlit application allows users to interact with the Agentic AI system.
+
+The user can ask questions related to:
+
+- Project knowledge
+- Data analysis
+- ETL pipeline
+- Airflow
+- Products
+- Customers
+- Sales
+- Predictions
+
+The Streamlit UI sends the user query to the Agentic AI system and displays the final response.
