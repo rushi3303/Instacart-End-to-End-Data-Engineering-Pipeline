@@ -1,91 +1,231 @@
-# 🚀 Instacart End-to-End Data Engineering Pipeline
+🚀 Instacart End-to-End Data Engineering Pipeline with Agentic AI
 
-A production-style End-to-End Data Engineering Pipeline built using the Instacart Dataset following the **Medallion Architecture (Bronze → Silver → Gold)**. The project demonstrates scalable ETL processing, metadata-driven incremental loading, audit logging, Apache Airflow orchestration, PostgreSQL data warehousing, and Power BI reporting.
+A production-style End-to-End Data Engineering and Agentic AI Platform built using the Instacart dataset.
 
----
+This project combines a modern Data Engineering Pipeline based on the Medallion Architecture (Bronze → Silver → Gold) with an Agentic AI Multi-Agent System.
 
-# 📌 Project Overview
+📌 Project Overview
 
-This project simulates a real-world Data Engineering workflow by ingesting raw Instacart CSV files into PostgreSQL and transforming them into analytics-ready datasets.
+Raw Instacart CSV files are processed through a complete ETL pipeline and transformed into analytics-ready datasets inside PostgreSQL.
 
-The pipeline includes:
+Features
 
-- Raw Data Ingestion
-- Incremental Bronze Loading
-- Metadata-Based File Tracking
-- Data Cleaning & Validation
-- Business Transformation
-- Audit Logging
-- Airflow Orchestration
-- Power BI Reporting
+Raw Data Ingestion
 
----
+Incremental Bronze Loading
 
-# 🏗️ Architecture
+Metadata-Based File Tracking
 
-```
-                     Instacart CSV Files
-                             │
-                             ▼
-                  Apache Airflow Scheduler
-                             │
-                             ▼
-                  Python ETL Pipeline
-                             │
-        ┌──────────────────────────────────────┐
-        │                                      │
-        ▼                                      ▼
- Bronze Layer                           Metadata Layer
- (Raw Data)                          (File Tracking)
+Data Cleaning and Validation
+
+Bronze → Silver → Gold Transformation
+
+SCD Type 1 and SCD Type 2
+
+Audit Logging
+
+Apache Airflow Orchestration
+
+PostgreSQL Data Warehouse
+
+Power BI Reporting
+
+Agentic AI Multi-Agent System
+
+Intent-Based Agent Routing
+
+Pipeline Monitoring
+
+Natural Language Data Interaction
+
+Streamlit AI Interface
+
+🏗️ System Architecture
+
+Instacart CSV Files
         │
         ▼
- Silver Layer
- (Clean & Validated Data)
+Apache Airflow Scheduler
         │
         ▼
- Gold Layer
- (Business Ready Tables)
+Python ETL Pipeline
         │
         ▼
- PostgreSQL Data Warehouse
+Bronze Layer
         │
         ▼
-      Power BI Dashboard
-```
+Silver Layer
+        │
+        ▼
+Gold Layer
+        │
+        ▼
+PostgreSQL Data Warehouse
+        │
+        ├──► Power BI Dashboard
+        │
+        └──► Agentic AI System
+                    │
+                    ▼
+               Intent Router
+                    │
+     ┌──────────────┼──────────────┐
+     ▼              ▼              ▼
+Pipeline Agent   Data Agent    Insight Agent
+Support Agent    Action Agent  Report Agent
+ML Agent
 
----
+🤖 Agentic AI Architecture
 
-# ⚙️ Technology Stack
+The system uses a Multi-Agent Architecture.
 
-| Category | Technologies |
-|----------|--------------|
-| Language | Python |
-| Database | PostgreSQL |
-| Workflow Orchestration | Apache Airflow |
-| Containerization | Docker |
-| Message Broker | Redis |
-| Data Processing | Pandas |
-| ORM | SQLAlchemy |
-| Reporting | Power BI |
-| Version Control | Git & GitHub |
+User Question
+      │
+      ▼
+Intent Router
+      │
+      ├── Pipeline Question ───► Pipeline Agent
+      ├── Data Question ───────► Data Agent
+      ├── Insight Question ────► Insight Agent
+      ├── Recommendation ──────► Action Agent
+      ├── Report Request ──────► Report Agent
+      ├── Prediction Request ──► ML Agent
+      └── Technical Question ──► Support Agent
 
----
+🧠 AI Agents
 
-# 📂 Project Structure
+The project contains 7 specialized AI agents.
 
-```
-Instacart-End-to-End-Data-Engineering-Pipeline
+#
 
+Agent
+
+Responsibility
+
+1
+
+⚙️ Pipeline Agent
+
+Monitors pipeline status, Airflow DAG execution, latest run, failures and audit logs
+
+2
+
+🤝 Support Agent
+
+Explains project architecture, technologies, Bronze, Silver, Gold and SCD concepts
+
+3
+
+📊 Data Agent
+
+Handles questions related to products, orders, customers and PostgreSQL data
+
+4
+
+💡 Insight Agent
+
+Generates business insights, trends and analytical observations
+
+5
+
+🎯 Action Agent
+
+Provides business recommendations and suggested actions
+
+6
+
+📄 Report Agent
+
+Generates project summaries and analytical reports
+
+7
+
+🧠 ML Agent
+
+Handles prediction, forecasting and machine learning analysis
+
+⚙️ Technology Stack
+
+Category
+
+Technologies
+
+Programming Language
+
+Python
+
+Database
+
+PostgreSQL
+
+Workflow Orchestration
+
+Apache Airflow
+
+Containerization
+
+Docker
+
+Message Broker
+
+Redis
+
+Data Processing
+
+Pandas
+
+Database Toolkit
+
+SQLAlchemy
+
+Business Intelligence
+
+Power BI
+
+AI / LLM
+
+Gemini
+
+AI / ML
+
+Hugging Face, Machine Learning
+
+Agentic AI
+
+Multi-Agent Architecture
+
+Web Interface
+
+Streamlit
+
+Version Control
+
+Git & GitHub
+
+📂 Project Structure
+
+Data_Engineering_project
+│
+├── agent/
+│   ├── agents/
+│   │   ├── pipeline_agent.py
+│   │   ├── support_agent.py
+│   │   ├── data_agent.py
+│   │   ├── insight_agent.py
+│   │   ├── action_agent.py
+│   │   ├── report_agent.py
+│   │   └── ml_agent.py
+│   ├── tools/
+│   │   ├── postgres_tool.py
+│   │   └── airflow_tool.py
+│   ├── router.py
+│   └── main.py
 │
 ├── airflow/
 │   └── dags/
-│
+│       └── instacart_etl_dag.py
 ├── config/
-│
-├── data/
-│   └── source/
-│       └── csv/
-│
+├── data/source/csv/
 ├── scripts/
 │   ├── load/
 │   ├── transformation/
@@ -93,183 +233,137 @@ Instacart-End-to-End-Data-Engineering-Pipeline
 │   ├── metadata/
 │   ├── validation/
 │   └── logging/
-│
 ├── docker/
-│
+│   └── docker-compose.yml
 ├── images/
-│
+├── streamlit_app.py
 ├── requirements.txt
-│
+├── .env
+├── .gitignore
 └── README.md
-```
 
----
+🥉 Bronze Layer
 
-# 🔄 ETL Workflow
+The Bronze Layer stores raw data from Instacart CSV files.
 
-```
-CSV Files
-    │
-    ▼
-Load to Bronze
-    │
-    ▼
-Metadata Validation
-(File Modified + File Size)
-    │
-    ▼
+Features
+
+Raw Data Storage
+
+Chunk-Based CSV Loading
+
+Dynamic Primary Key Detection
+
+ON CONFLICT DO NOTHING
+
+Metadata-Based Incremental Loading
+
+File Timestamp Validation
+
+File Size Validation
+
 Skip Unchanged Files
-    │
-    ▼
-Bronze Layer
-    │
-    ▼
-Silver Layer
-    │
-    ▼
-Gold Layer
-    │
-    ▼
-Power BI Dashboard
-```
 
----
+Production Logging
 
-# 🥉 Bronze Layer
+🥈 Silver Layer
 
-### Features
+The Silver Layer performs:
 
-- Raw Data Storage
-- Chunk-based CSV Loading
-- Dynamic Primary Key Detection
-- ON CONFLICT DO NOTHING
-- Metadata-based Incremental Loading
-- File Timestamp Validation
-- File Size Validation
-- Skip Unchanged Files
-- Production Logging
+Duplicate Removal
 
----
+NULL Handling
 
-# 🥈 Silver Layer
+Text Standardization
 
-### Features
+Data Transformation
 
-- Data Cleaning
-- Remove Duplicate Records
-- NULL Handling
-- Text Standardization
-- Business Rule Validation
-- Data Quality Checks
+Business Rule Validation
 
----
+Data Quality Checks
 
-# 🥇 Gold Layer
+🥇 Gold Layer
 
 Business-ready analytical tables:
 
-- Product Dimension
-- Order Fact
-- Customer Summary
-- Sales Summary
+Product Dimension
 
-Optimized for BI reporting.
+Order Fact
 
----
+Customer Summary
 
-# 📊 Metadata Framework
+Sales Summary
 
-Metadata Schema maintains:
+🔄 SCD Implementation
 
-- File Name
-- Last Modified Timestamp
-- File Size
-- Last Loaded Timestamp
-- Load Status
+SCD Type 1
 
-This enables incremental processing and prevents unnecessary data loading.
+Old records are overwritten when values change.
 
----
+SCD Type 2
 
-# 📋 Audit Framework
+Historical changes are preserved by marking the old record inactive and inserting a new record.
 
-The Audit Layer tracks:
+📊 Metadata Framework
 
-- Pipeline Name
-- Layer Name
-- Table Name
-- Start Time
-- End Time
-- Execution Status
-- Execution Duration
+The Metadata Schema maintains:
 
----
+File Name
 
-# ⚡ Incremental Loading Strategy
+Last Modified Timestamp
 
-The Bronze Layer implements metadata-driven incremental loading.
+File Size
 
-### Workflow
+Last Loaded Timestamp
 
-```
+Load Status
+
+This enables incremental processing and prevents unnecessary loading.
+
+⚡ Incremental Loading Strategy
+
 Read CSV Metadata
         │
         ▼
-Compare
-
-Last Modified Time
-+
-File Size
-
+Compare File Information
         │
-        ▼
-File Changed?
+        ├── Last Modified Time
+        └── File Size
+                │
+                ▼
+          File Changed?
+             │
+        ┌────┴────┐
+        │         │
+       YES        NO
+        │         │
+        ▼         ▼
+ Load File    Skip File
 
-     Yes ─────────► Load Bronze
+📋 Audit Framework
 
-     No ──────────► Skip File
-```
+The Audit Layer tracks:
 
-Benefits
+Pipeline Name
 
-- Faster Execution
-- Reduced Database Load
-- No Duplicate Records
-- Production-style Processing
+Layer Name
 
----
+Table Name
 
-# 🎯 Key Features
+Start Time
 
-- Medallion Architecture
-- Incremental Bronze Loading
-- Metadata-driven File Tracking
-- Skip Logic
-- Dynamic Primary Key Detection
-- Chunk-based Processing
-- Audit Framework
-- Data Validation
-- Logging Framework
-- Airflow DAG Orchestration
-- Dockerized Deployment
-- PostgreSQL Data Warehouse
-- Power BI Dashboard
+End Time
 
----
+Execution Status
 
-# 🗄️ Database Schemas
+Execution Duration
 
-- Bronze
-- Silver
-- Gold
-- Metadata
-- Audit
+Error Message
 
----
+The Pipeline Agent uses these audit logs to monitor pipeline execution.
 
-# 🔄 Airflow Pipeline
+⚡ Apache Airflow Pipeline
 
-```
 Load to Bronze
         │
         ▼
@@ -277,68 +371,305 @@ Bronze to Silver
         │
         ▼
 Silver to Gold
-```
+        │
+        ▼
+SCD Type 1
+        │
+        ▼
+SCD Type 2
 
----
+⚙️ Pipeline Agent Monitoring
 
-# 📈 Power BI Dashboard
+The Pipeline Agent can answer:
 
-The dashboard includes:
+What is the current pipeline status?
 
-- Sales Overview
-- Department Analysis
-- Customer Insights
-- Product Analysis
-- Order Trends
-- KPI Cards
-- Interactive Filters
+Is Airflow running?
 
----
+When was the latest DAG run?
 
-# 📸 Project Screenshots
+Are there any failed tasks?
 
-## Airflow DAG
+It checks:
+
+Airflow Server Status
+
+DAG ID
+
+Latest Pipeline Run
+
+PostgreSQL Audit Logs
+
+Successful Tasks
+
+Failed Tasks
+
+Running Tasks
+
+💬 Example Questions
+
+Pipeline Agent
+
+What is the current pipeline status?
+Is Airflow running?
+When was the latest DAG run?
+Show pipeline failures.
+
+Support Agent
+
+Explain Bronze, Silver and Gold layers.
+What is SCD Type 2?
+Explain the project architecture.
+How does incremental loading work?
+
+Data Agent
+
+Show me top products.
+Show customer data.
+Show order information.
+Show product details.
+
+Insight Agent
+
+Give me business insights from the data.
+Analyze sales trends.
+Show important trends.
+
+Action Agent
+
+What actions should we take to improve sales?
+Give me business recommendations.
+What should we do based on the data?
+
+Report Agent
+
+Generate a project summary report.
+Create a full business report.
+Generate an analytical report.
+
+ML Agent
+
+Predict future sales.
+Give me a sales forecast.
+Perform machine learning analysis.
+
+🖥️ Streamlit AI Interface
+
+Features:
+
+Professional Chat Interface
+
+7 AI Agents
+
+Intent-Based Agent Routing
+
+Pipeline Monitoring
+
+Natural Language Questions
+
+Data Visualizations
+
+Voice Response
+
+Light Mode
+
+Dark Mode
+
+Run:
+
+streamlit run streamlit_app.py
+
+🚀 Installation
+
+1. Clone the Repository
+
+git clone https://github.com/rushi3303/YOUR_REPOSITORY_NAME.git
+cd YOUR_REPOSITORY_NAME
+
+2. Create Virtual Environment
+
+python -m venv .venv
+
+Activate on Windows:
+
+.venv\Scripts\activate
+
+3. Install Dependencies
+
+pip install -r requirements.txt
+
+🔐 Environment Variables
+
+Create a .env file:
+
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_DB=your_database
+POSTGRES_USER=your_username
+POSTGRES_PASSWORD=your_password
+
+GEMINI_API_KEY=your_api_key
+
+Do not upload the .env file to GitHub.
+
+🐳 Run Docker Services
+
+cd docker
+docker compose up -d
+docker compose ps
+
+Stop services:
+
+docker compose down
+
+🌬️ Access Airflow
+
+Open:
+
+http://localhost:8080
+
+DAG:
+
+instacart_etl_pipeline
+
+🤖 Run the Multi-Agent System
+
+python -m agent.main
+
+The Intent Router automatically selects the appropriate agent.
+
+📊 Power BI Dashboard
+
+The dashboard provides:
+
+Sales Overview
+
+Department Analysis
+
+Customer Insights
+
+Product Analysis
+
+Order Trends
+
+KPI Cards
+
+Interactive Filters
+
+🗄️ Database Schemas
+
+Bronze
+
+Silver
+
+Gold
+
+Metadata
+
+Audit
+
+🔐 .gitignore
+
+.venv/
+__pycache__/
+.env
+*.pyc
+*.log
+.vscode/
+.idea/
+
+📸 Project Screenshots
+
+Add screenshots inside the images folder:
 
 ![Airflow DAG](images/airflow_dag.png)
 
----
+![Docker Containers](images/docker_containers.png)
 
-## Docker Containers
+![PostgreSQL Schemas](images/postgres_schema.png)
 
-![Docker](images/docker_containers.png)
+![Power BI Dashboard](images/powerbi_dashboard.png)
 
----
+![Agentic AI Interface](images/agentic_ai_interface.png)
 
-## PostgreSQL Schemas
+🎯 Key Features
 
-![PostgreSQL](images/postgres_schema.png)
+End-to-End Data Engineering Pipeline
 
----
+Medallion Architecture
 
-## Power BI Dashboard
+Bronze → Silver → Gold
 
-![Power BI](images/powerbi_dashboard.png)
+Incremental Data Loading
 
----
+Metadata-Based File Tracking
 
-# 🚀 Future Enhancements
+Data Cleaning and Validation
 
-- AWS S3 Integration
-- Azure Data Factory
-- Snowflake Data Warehouse
-- Apache Kafka Streaming
-- CI/CD Pipeline
-- Data Quality Monitoring
-- Unit Testing
-- Email Alerts
-- Cloud Deployment
+SCD Type 1
 
----
+SCD Type 2
 
-# 👨‍💻 Author
+Audit Framework
 
-**Rushikesh Sudam Bhosale**
+Logging Framework
 
-**GitHub:** https://github.com/rushi3303
+Apache Airflow Orchestration
 
-**LinkedIn:** https://www.linkedin.com/in/rushikeshbhosale
+Dockerized Deployment
+
+PostgreSQL Data Warehouse
+
+Power BI Dashboard
+
+Agentic AI Integration
+
+Multi-Agent Architecture
+
+7 Specialized AI Agents
+
+Intent-Based Routing
+
+Pipeline Monitoring
+
+Natural Language Data Interaction
+
+Streamlit AI Interface
+
+🚀 Future Enhancements
+
+Real-Time Airflow REST API Monitoring
+
+AWS S3 Integration
+
+Azure Data Factory
+
+Snowflake Data Warehouse
+
+Apache Kafka Streaming
+
+CI/CD Pipeline
+
+Automated Data Quality Monitoring
+
+Unit Testing
+
+Email Alerts
+
+Cloud Deployment
+
+Advanced ML Models
+
+RAG-Based Documentation Assistant
+
+Role-Based Access Control
+
+👨‍💻 Author
+
+Rushikesh Sudam Bhosale
+
+🎓 B.Tech – Electronics and Computer Engineering
+
+GitHub: https://github.com/rushi3303
+
+LinkedIn: https://www.linkedin.com/in/rushikeshbhosale
