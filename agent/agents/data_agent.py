@@ -51,11 +51,26 @@ def data_agent(query):
         }
 
     # ==================================================
-    # 2. SALES / REVENUE SUMMARY
+    # 2. REVENUE NOT AVAILABLE
+    # ==================================================
+    elif "revenue" in q:
+
+        return {
+            "agent": "Data Agent",
+            "type": "revenue_not_available",
+            "data": None,
+            "message": (
+                "Revenue is not available in the current "
+                "Instacart data model, so total revenue "
+                "cannot be calculated from the available data."
+            )
+        }
+
+    # ==================================================
+    # 3. SALES SUMMARY
     # ==================================================
     elif (
         "sales" in q
-        or "revenue" in q
         or "department sales" in q
     ):
 
@@ -69,7 +84,7 @@ def data_agent(query):
         }
 
     # ==================================================
-    # 3. CUSTOMER SUMMARY
+    # 4. CUSTOMER SUMMARY
     # ==================================================
     elif (
         "customer" in q
@@ -86,7 +101,7 @@ def data_agent(query):
         }
 
     # ==================================================
-    # 4. REJECTED RECORDS
+    # 5. REJECTED RECORDS
     # ==================================================
     elif (
         "rejected" in q
@@ -103,7 +118,7 @@ def data_agent(query):
         }
 
     # ==================================================
-    # 5. DATA QUALITY
+    # 6. DATA QUALITY
     # ==================================================
     elif (
         "quality" in q
@@ -122,7 +137,7 @@ def data_agent(query):
         }
 
     # ==================================================
-    # 6. ETL HISTORY
+    # 7. ETL HISTORY
     # ==================================================
     elif (
         "etl history" in q
@@ -141,7 +156,7 @@ def data_agent(query):
         }
 
     # ==================================================
-    # 7. AIRFLOW PIPELINE STATUS
+    # 8. AIRFLOW PIPELINE STATUS
     # ==================================================
     elif (
         "pipeline status" in q
@@ -160,7 +175,7 @@ def data_agent(query):
         }
 
     # ==================================================
-    # 8. AIRFLOW DAG INFORMATION
+    # 9. AIRFLOW DAG INFORMATION
     # ==================================================
     elif (
         "airflow" in q
@@ -178,7 +193,7 @@ def data_agent(query):
         }
 
     # ==================================================
-    # 9. ETL STATUS
+    # 10. ETL STATUS
     # ==================================================
     elif (
         "etl status" in q
@@ -198,7 +213,7 @@ def data_agent(query):
         }
 
     # ==================================================
-    # 10. CHART / VISUALIZATION REQUEST
+    # 11. CHART / VISUALIZATION REQUEST
     # ==================================================
     elif (
         "chart" in q

@@ -13,39 +13,85 @@ def detect_intent(question):
     7. Pipeline Agent
     """
 
-    q = question.lower()
+    q = question.lower().strip()
 
     # =====================================================
     # PIPELINE AGENT ⚙️
-    # Priority: High
+    # Priority: Highest
     # =====================================================
 
     if any(phrase in q for phrase in [
 
+        # Pipeline status
         "pipeline status",
         "pipeline health",
         "pipeline run",
-        "etl status",
-        "etl pipeline",
-        "airflow",
-        "dag status",
-        "dag run",
-        "latest run",
-        "latest pipeline run",
-        "failed task",
-        "failed tasks",
+        "pipeline execution",
         "pipeline failed",
         "pipeline success",
-        "did the pipeline succeed",
-        "is pipeline running",
+        "pipeline scheduled",
+        "pipeline schedule",
+
+        # ETL
+        "etl status",
+        "etl pipeline",
+        "etl execution",
+        "etl failed",
+        "etl success",
+
+        # Airflow
+        "airflow",
+        "airflow status",
+        "airflow running",
         "is airflow running",
-        "current pipeline status",
-        "pipeline execution",
-        "execution status"
+
+        # DAG
+        "dag id",
+        "dag name",
+        "dag status",
+        "dag run",
+        "dag task",
+        "dag tasks",
+
+        # Latest / Last run
+        "latest run",
+        "latest pipeline run",
+        "last run",
+        "last pipeline run",
+        "latest execution",
+        "last execution",
+
+        # Tasks
+        "failed task",
+        "failed tasks",
+        "successful task",
+        "successful tasks",
+        "running task",
+        "running tasks",
+        "pipeline task",
+        "pipeline tasks",
+        "number of tasks",
+        "total tasks",
+
+        # Task flow
+        "task flow",
+        "pipeline flow",
+
+        # Pipeline execution questions
+        "is pipeline running",
+        "did the pipeline succeed",
+        "was the pipeline successful",
+        "pipeline successful",
+
+        # Execution status
+        "execution status",
+        "execution failed",
+        "execution success"
 
     ]):
 
         return "pipeline_agent"
+
 
     # =====================================================
     # REPORT AGENT 📄
@@ -63,6 +109,7 @@ def detect_intent(question):
     ]):
 
         return "report_agent"
+
 
     # =====================================================
     # ACTION AGENT 🎯
@@ -85,6 +132,7 @@ def detect_intent(question):
 
         return "action_agent"
 
+
     # =====================================================
     # INSIGHT AGENT 💡
     # Priority: High
@@ -105,6 +153,7 @@ def detect_intent(question):
 
         return "insight_agent"
 
+
     # =====================================================
     # ML AGENT 🧠
     # =====================================================
@@ -124,6 +173,7 @@ def detect_intent(question):
     ]):
 
         return "ml_agent"
+
 
     # =====================================================
     # DATA AGENT 📊
@@ -155,6 +205,7 @@ def detect_intent(question):
 
         return "data_agent"
 
+
     # =====================================================
     # SUPPORT AGENT 🤝
     # =====================================================
@@ -182,6 +233,7 @@ def detect_intent(question):
     ]):
 
         return "support_agent"
+
 
     # =====================================================
     # DEFAULT

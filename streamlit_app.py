@@ -1072,21 +1072,42 @@ if st.session_state["last_executed_response"] is not None:
 
         # Power BI & Analytics Advisor
         st.markdown("<div style='margin-top: 14px;'></div>", unsafe_allow_html=True)
-        st.markdown(f"""
-        <div class="advisor-card">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
-                <div style="font-weight: 700; font-size: 15px; color: #FFFFFF; display: flex; align-items: center; gap: 8px;">
-                    <span>🧠</span> Power BI & Visual Analytics Advisor
+
+        if chart_info:
+
+            chart_type = chart_info.get(  
+                "chart_type",
+                "Recommended visualization"
+            )
+
+            reasoning = chart_info.get(
+                "reasoning",
+                "This visualization was selected based on the available data and query requirements."
+            )
+
+            st.markdown(f"""
+            <div class="advisor-card">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                    <div style="font-weight: 700; font-size: 15px; color: #FFFFFF; display: flex; align-items: center; gap: 8px;">
+                        <span>🧠</span> Power BI & Visual Analytics Advisor
+                    </div>
+
+                    <span class="badge-pill" style="background: rgba(139, 92, 246, 0.2); color: #C4B5FD; border: 1px solid rgba(139, 92, 246, 0.4);">
+                        Recommended: {chart_type}
+                    </span>
                 </div>
-                <span class="badge-pill" style="background: rgba(139, 92, 246, 0.2); color: #C4B5FD; border: 1px solid rgba(139, 92, 246, 0.4);">
-                    Recommended: {chart_info['chart_type']}
-                </span>
+
+                <div style="font-size: 13px; color: #CBD5E1; line-height: 1.6;">
+                    <strong>Why this visual is recommended:</strong> {reasoning}
+                </div>
             </div>
-            <div style="font-size: 13px; color: #CBD5E1; line-height: 1.6;">
-                <strong>Why this visual is recommended:</strong> {chart_info.get('reasoning', 'This visualization was selected based on the available data and query requirements.')}
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+            """, unsafe_allow_html=True)
+
+        else:
+
+            st.info(
+                "No visualization is required for this query."
+            )
 
     # -----------------------------------------------------
     # TAB 3: Medallion Architecture & Airflow Monitor
