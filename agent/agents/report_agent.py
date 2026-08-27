@@ -34,38 +34,72 @@ def report_agent(query):
     """
     Report Agent:
 
-    1. Receives report request
-    2. Calls Data Agent
-    3. Gets actual project/database data
-    4. Generates insights
-    5. Generates recommended actions
-    6. Creates a complete report
+    User Question
+        ↓
+    Data Agent
+        ↓
+    Actual Data
+        ↓
+    Insight Agent
+        ↓
+    Action Agent
+        ↓
+    Complete Report
     """
 
-    # Step 1: Get actual data
-    data_result = data_agent(query)
+    try:
 
-    intent = data_result.get("type")
-    data = data_result.get("data")
+        # Step 1: Get actual data
+        data_result = data_agent(query)
 
-    # Check if data request was successful
-    if intent == "unknown":
+        intent = data_result.get(
+            "type",
+            "unknown"
+        )
+
+        data = data_result.get(
+            "data"
+        )
+
+        # Step 2: Handle unknown request
+        if intent == "unknown":
+
+            return {
+                "agent": "Report Agent",
+                "type": "unknown",
+                "data": None,
+                "report": None,
+                "message": (
+                    "Sorry, I could not identify "
+                    "the data required for the report."
+                )
+            }
+
+        # Step 3: Generate complete report
+        report = create_report(
+            intent,
+            data
+        )
+
+        # Step 4: Return report
+        return {
+            "agent": "Report Agent",
+            "type": intent,
+            "data": data,
+            "report": report,
+            "message": (
+                "Report generated successfully."
+            )
+        }
+
+    except Exception as e:
 
         return {
             "agent": "Report Agent",
-            "type": "unknown",
+            "type": "error",
             "data": None,
             "report": None,
-            "message": "Sorry, I could not identify the data required for the report."
+            "message": (
+                f"Report Agent Error: {str(e)}"
+            )
         }
-
-    # Step 2: Create complete report
-    report = create_report(intent, data)
-
-    return {
-        "agent": "Report Agent",
-        "type": intent,
-        "data": data,
-        "report": report,
-        "message": "Report generated successfully."
-    }

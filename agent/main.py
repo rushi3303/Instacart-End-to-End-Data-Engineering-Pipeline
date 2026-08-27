@@ -8,14 +8,20 @@ from agent.agents.report_agent import report_agent
 from agent.agents.ml_agent import ml_agent
 from agent.agents.pipeline_agent import pipeline_agent
 
+from agent.rag.index_manager import check_and_update_index
+
 from agent.tools.chart_tool import recommend_chart
+from agent.llm_agent import LLMAgent
+
+
+llm_agent = LLMAgent()
 
 
 # =====================================================
 # BUILD RESPONSE
 # =====================================================
 
-def build_response(result, selected_agent):
+def build_response(result, selected_agent, question):
 
     """
     Converts responses from all agents into one
@@ -79,11 +85,23 @@ def build_response(result, selected_agent):
             result.get("message")
         )
 
+        # =================================================
+        # LLM FINAL ANSWER FOR GENERIC SQL QUERIES
+        # =================================================
+
+        if result_type == "sql_query":
+
+            formatted_text = llm_agent.generate_final_answer(
+                question=question,
+                agent_name="Data Agent",
+                agent_output=result
+            )
+
         return {
             "intent": result_type,
 
             "reasoning":
-                f"The Router selected the Data Agent to handle "
+                "The Router selected the Data Agent to handle "
                 f"this {result_type.replace('_', ' ')} request.",
 
             "raw_data": data,
@@ -206,16 +224,24 @@ def build_response(result, selected_agent):
             "Data Engineering Report"
         )
 
-        report_data = report.get("data", [])
+        report_data = report.get(
+            "data",
+            []
+        )
 
-        insights = report.get("insights", [])
+        insights = report.get(
+            "insights",
+            []
+        )
 
         actions = report.get(
             "recommended_actions",
             []
         )
 
-        formatted_text = f"📄 {title}\n\n"
+        formatted_text = (
+            f"📄 {title}\n\n"
+        )
 
         formatted_text += "DATA:\n"
 
@@ -239,7 +265,9 @@ def build_response(result, selected_agent):
 
             formatted_text += "No insights available."
 
-        formatted_text += "\n\nRECOMMENDED ACTIONS:\n"
+        formatted_text += (
+            "\n\nRECOMMENDED ACTIONS:\n"
+        )
 
         if actions:
 
@@ -286,11 +314,51 @@ def build_response(result, selected_agent):
 
     elif selected_agent == "ml_agent":
 
-        formatted_text = format_data_response(
-            result_type,
-            data,
-            result.get("message")
-        )
+        # =================================================
+        # CUSTOMER REORDER PREDICTION
+        # =================================================
+
+        if (
+            result_type == "customer_reorder_prediction"
+            and data
+        ):
+
+            formatted_text = (
+                "Customer Reorder Prediction\n\n"
+                f"Prediction: "
+                f"{data.get('prediction')}\n"
+                f"Result: "
+                f"{data.get('result')}\n"
+                f"Reorder Probability: "
+                f"{data.get('reorder_probability')}%"
+            )
+
+        # =================================================
+        # PRODUCT DEMAND ANALYSIS
+        # =================================================
+
+        elif (
+            result_type == "product_demand_prediction"
+            and data
+        ):
+
+            formatted_text = (
+                "Product Demand Analysis\n\n"
+                f"Product ID: "
+                f"{data.get('product_id')}\n"
+                f"Historical Orders: "
+                f"{data.get('historical_orders')}\n"
+                f"Demand Level: "
+                f"{data.get('demand_level')}"
+            )
+
+        else:
+
+            formatted_text = format_data_response(
+                result_type,
+                data,
+                result.get("message")
+            )
 
         return {
             "intent": result_type,
@@ -325,31 +393,30 @@ def build_response(result, selected_agent):
 
     elif selected_agent == "pipeline_agent":
 
-       formatted_text = result.get(
-           "message",
-           "Pipeline status is not available."
+        formatted_text = result.get(
+            "message",
+            "Pipeline status is not available."
         )
 
-       return {
+        return {
             "intent": result_type,
 
             "reasoning":
-              "The Router selected the Pipeline Agent to "
-              "retrieve the latest ETL pipeline status.",
+                "The Router selected the Pipeline Agent to "
+                "retrieve the latest ETL pipeline status.",
 
             "raw_data": data,
 
             "formatted_text": formatted_text,
 
-            "chart_info":None,
-               
+            "chart_info": None,
 
             "insights": [],
 
             "actions": [],
 
             "report_data": {
-              "full_text": formatted_text
+                "full_text": formatted_text
             },
 
             "selected_agent": selected_agent,
@@ -397,7 +464,11 @@ def build_response(result, selected_agent):
 # FORMAT DATA RESPONSE
 # =====================================================
 
-def format_data_response(result_type, data, message=None):
+def format_data_response(
+    result_type,
+    data,
+    message=None
+):
 
     """
     Converts agent data into readable text.
@@ -409,7 +480,10 @@ def format_data_response(result_type, data, message=None):
     if data is None:
         return "No data available."
 
+    # =================================================
     # Dictionary response
+    # =================================================
+
     if isinstance(data, dict):
 
         lines = []
@@ -426,7 +500,10 @@ def format_data_response(result_type, data, message=None):
 
         return "\n".join(lines)
 
+    # =================================================
     # List response
+    # =================================================
+
     if isinstance(data, list):
 
         if not data:
@@ -471,7 +548,7 @@ def process_question(question):
     Action Agent
     Report Agent
     ML Agent
-    pipeline Agent
+    Pipeline Agent
     --------------------------------
           ↓
     Unified Response
@@ -480,7 +557,9 @@ def process_question(question):
     """
 
     # Detect which agent should handle question
-    selected_agent = detect_intent(question)
+    selected_agent = detect_intent(
+        question
+    )
 
     # ================================================
     # SUPPORT AGENT
@@ -488,7 +567,9 @@ def process_question(question):
 
     if selected_agent == "support_agent":
 
-        result = support_agent(question)
+        result = support_agent(
+            question
+        )
 
     # ================================================
     # DATA AGENT
@@ -496,7 +577,9 @@ def process_question(question):
 
     elif selected_agent == "data_agent":
 
-        result = data_agent(question)
+        result = data_agent(
+            question
+        )
 
     # ================================================
     # INSIGHT AGENT
@@ -504,7 +587,9 @@ def process_question(question):
 
     elif selected_agent == "insight_agent":
 
-        result = insight_agent(question)
+        result = insight_agent(
+            question
+        )
 
     # ================================================
     # ACTION AGENT
@@ -512,7 +597,9 @@ def process_question(question):
 
     elif selected_agent == "action_agent":
 
-        result = action_agent(question)
+        result = action_agent(
+            question
+        )
 
     # ================================================
     # REPORT AGENT
@@ -520,7 +607,9 @@ def process_question(question):
 
     elif selected_agent == "report_agent":
 
-        result = report_agent(question)
+        result = report_agent(
+            question
+        )
 
     # ================================================
     # ML AGENT
@@ -528,7 +617,9 @@ def process_question(question):
 
     elif selected_agent == "ml_agent":
 
-        result = ml_agent(question)
+        result = ml_agent(
+            question
+        )
 
     # ================================================
     # PIPELINE AGENT
@@ -536,8 +627,10 @@ def process_question(question):
 
     elif selected_agent == "pipeline_agent":
 
-        result = pipeline_agent(question)   
-     
+        result = pipeline_agent(
+            question
+        )
+
     # ================================================
     # UNKNOWN
     # ================================================
@@ -556,7 +649,8 @@ def process_question(question):
 
     return build_response(
         result,
-        selected_agent
+        selected_agent,
+        question
     )
 
 
@@ -566,15 +660,27 @@ def process_question(question):
 
 def main():
 
+    # =================================================
+    # RAG AUTO INDEX CHECK
+    # =================================================
+
+    check_and_update_index()
+
     print("=" * 60)
-    print("MULTI-AGENT AI DATA ENGINEERING SYSTEM")
+
+    print(
+        "MULTI-AGENT AI DATA ENGINEERING SYSTEM"
+    )
+
     print("=" * 60)
 
     question = input(
         "\nAsk your question: "
     )
 
-    response = process_question(question)
+    response = process_question(
+        question
+    )
 
     print("\n" + "=" * 60)
 
@@ -602,4 +708,5 @@ def main():
 # =====================================================
 
 if __name__ == "__main__":
+
     main()

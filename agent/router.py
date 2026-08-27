@@ -1,244 +1,134 @@
+from agent.gemini_service import GeminiService
+
+
 def detect_intent(question):
     """
-    Detects which agent should handle
-    the user's question.
+    Uses Gemini to understand the user's question
+    and select the most appropriate agent.
 
-    Agents:
-    1. Support Agent
-    2. Data Agent
-    3. Insight Agent
-    4. Action Agent
-    5. Report Agent
-    6. ML Agent
-    7. Pipeline Agent
+    Returns only the agent name so that the
+    existing main.py flow remains unchanged.
     """
 
-    q = question.lower().strip()
+    gemini = GeminiService()
 
-    # =====================================================
-    # PIPELINE AGENT ⚙️
-    # Priority: Highest
-    # =====================================================
+    prompt = f"""
+You are an intelligent router for an
+Instacart End-to-End Data Engineering Agentic AI system.
 
-    if any(phrase in q for phrase in [
+Your job is to understand the user's question semantically
+and select the ONE best agent to handle it.
 
-        # Pipeline status
-        "pipeline status",
-        "pipeline health",
-        "pipeline run",
-        "pipeline execution",
-        "pipeline failed",
-        "pipeline success",
-        "pipeline scheduled",
-        "pipeline schedule",
+Available agents:
 
-        # ETL
-        "etl status",
-        "etl pipeline",
-        "etl execution",
-        "etl failed",
-        "etl success",
+1. data_agent
+   - Questions about Instacart data
+   - Users/customers
+   - Orders
+   - Products
+   - Departments
+   - Aisles
+   - Reorders
+   - Counts, totals, averages, percentages
+   - Data analysis based on PostgreSQL
+   - Database queries
+   - Data quality or validation questions
 
-        # Airflow
-        "airflow",
-        "airflow status",
-        "airflow running",
-        "is airflow running",
+2. insight_agent
+   - Business analysis
+   - Why/how analysis
+   - Trends
+   - Patterns
+   - Comparisons
+   - Business insights
+   - Questions requiring interpretation of data
 
-        # DAG
-        "dag id",
-        "dag name",
-        "dag status",
-        "dag run",
-        "dag task",
-        "dag tasks",
+3. pipeline_agent
+   - ETL pipeline
+   - Airflow
+   - DAGs
+   - Pipeline execution
+   - Pipeline status
+   - Pipeline failures
+   - Tasks
+   - Pipeline monitoring
 
-        # Latest / Last run
-        "latest run",
-        "latest pipeline run",
-        "last run",
-        "last pipeline run",
-        "latest execution",
-        "last execution",
+4. ml_agent
+   - Customer reorder prediction
+   - Product demand prediction
+   - Questions about reorder probability
+   - Questions about whether a product may be reordered
+   - Questions about product demand prediction
+   - Machine learning model related to order/customer behavior
 
-        # Tasks
-        "failed task",
-        "failed tasks",
-        "successful task",
-        "successful tasks",
-        "running task",
-        "running tasks",
-        "pipeline task",
-        "pipeline tasks",
-        "number of tasks",
-        "total tasks",
+5. report_agent
+   - Generate a report
+   - Create a report
+   - Full business/data report
+   - Summary report
 
-        # Task flow
-        "task flow",
-        "pipeline flow",
+6. action_agent
+   - Recommended actions
+   - What should we do?
+   - Business recommendations
+   - Suggested next actions
 
-        # Pipeline execution questions
-        "is pipeline running",
-        "did the pipeline succeed",
-        "was the pipeline successful",
-        "pipeline successful",
+7. support_agent
+   - Project explanation
+   - Architecture
+   - Technologies
+   - Bronze/Silver/Gold
+   - Medallion architecture
+   - Data engineering concepts
+   - General project-related questions
+   - Questions that do not belong to another specialized agent
 
-        # Execution status
-        "execution status",
-        "execution failed",
-        "execution success"
+IMPORTANT RULES:
 
-    ]):
+- Understand the meaning of the question, NOT just keywords.
+- Do not depend on exact words such as "customer", "order", "sales", etc.
+- A user may ask the same question in many different ways.
+- If the question asks for current Instacart data, choose data_agent.
+- If the question asks for explanation or business interpretation, choose the appropriate specialized agent.
+- Select exactly ONE agent.
+- Do not explain your decision.
+- Do not return JSON.
+- Return ONLY one of these exact values:
 
-        return "pipeline_agent"
+data_agent
+insight_agent
+pipeline_agent
+ml_agent
+report_agent
+action_agent
+support_agent
 
+User Question:
+{question}
+"""
 
-    # =====================================================
-    # REPORT AGENT 📄
-    # Priority: High
-    # =====================================================
+    try:
 
-    elif any(word in q for word in [
+        response = gemini.generate_response(prompt)
 
-        "report",
-        "generate report",
-        "create report",
-        "full report",
-        "summary report"
+        agent = response.strip().lower()
 
-    ]):
+        allowed_agents = {
+            "data_agent",
+            "insight_agent",
+            "pipeline_agent",
+            "ml_agent",
+            "report_agent",
+            "action_agent",
+            "support_agent"
+        }
 
-        return "report_agent"
+        if agent in allowed_agents:
+            return agent
 
-
-    # =====================================================
-    # ACTION AGENT 🎯
-    # Priority: High
-    # =====================================================
-
-    elif any(word in q for word in [
-
-        "action",
-        "actions",
-        "recommend action",
-        "recommended action",
-        "what should we do",
-        "what should i do",
-        "business action",
-        "recommendation",
-        "recommendations"
-
-    ]):
-
-        return "action_agent"
-
-
-    # =====================================================
-    # INSIGHT AGENT 💡
-    # Priority: High
-    # =====================================================
-
-    elif any(word in q for word in [
-
-        "insight",
-        "insights",
-        "business insight",
-        "business insights",
-        "analyze",
-        "analysis",
-        "trend",
-        "trends"
-
-    ]):
-
-        return "insight_agent"
-
-
-    # =====================================================
-    # ML AGENT 🧠
-    # =====================================================
-
-    elif any(word in q for word in [
-
-        "predict",
-        "prediction",
-        "forecast",
-        "machine learning",
-        "ml",
-        "model",
-        "anomaly",
-        "classification",
-        "regression"
-
-    ]):
-
-        return "ml_agent"
-
-
-    # =====================================================
-    # DATA AGENT 📊
-    # =====================================================
-
-    elif any(word in q for word in [
-
-        "sales",
-        "revenue",
-        "product",
-        "products",
-        "customer",
-        "customers",
-        "order",
-        "orders",
-
-        "data quality",
-        "validation",
-        "rejected",
-
-        "database",
-        "postgresql",
-
-        "chart",
-        "graph",
-        "visualization"
-
-    ]):
-
-        return "data_agent"
-
-
-    # =====================================================
-    # SUPPORT AGENT 🤝
-    # =====================================================
-
-    elif any(phrase in q for phrase in [
-
-        "explain",
-        "how does",
-        "how do",
-        "what is",
-        "what are",
-        "architecture",
-        "bronze",
-        "silver",
-        "gold",
-        "medallion",
-        "technology",
-        "technologies",
-        "project",
-        "overview",
-        "data flow",
-        "scd",
-        "about"
-
-    ]):
-
+        # Fallback if Gemini returns unexpected output
         return "support_agent"
 
-
-    # =====================================================
-    # DEFAULT
-    # =====================================================
-
-    else:
-
+    except Exception:
+        # Safe fallback
         return "support_agent"

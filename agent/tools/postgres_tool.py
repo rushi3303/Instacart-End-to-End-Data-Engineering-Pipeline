@@ -394,4 +394,70 @@ def get_rejected_records():
 
         return None
 
-
+def execute_read_only_query(sql):
+    """
+    Executes only safe read-only SQL queries.
+    """
+
+    sql_clean = sql.strip().lower()
+
+    # Only SELECT / WITH queries are allowed
+    if not (sql_clean.startswith("select") or sql_clean.startswith("with")):
+        return {
+            "success": False,
+            "error": "Only read-only SELECT queries are allowed."
+        }
+
+    # Block dangerous SQL operations
+    blocked_keywords = [
+        "insert ",
+        "update ",
+        "delete ",
+        "drop ",
+        "alter ",
+        "truncate ",
+        "create ",
+        "grant ",
+        "revoke ",
+        "execute ",
+        "call "
+    ]
+
+    if any(keyword in sql_clean for keyword in blocked_keywords):
+        return {
+            "success": False,
+            "error": "Unsafe SQL operation detected."
+        }
+
+    # Prevent multiple statements
+    if ";" in sql_clean.rstrip(";"):
+        return {
+            "success": False,
+            "error": "Multiple SQL statements are not allowed."
+        }
+
+    try:
+
+        with engine.connect() as conn:
+
+            result = conn.execute(text(sql))
+
+            rows = result.fetchall()
+            columns = result.keys()
+
+            data = [
+                dict(zip(columns, row))
+                for row in rows
+            ]
+
+            return {
+                "success": True,
+                "data": data
+            }
+
+    except Exception as e:
+
+        return {
+            "success": False,
+            "error": str(e)
+        }

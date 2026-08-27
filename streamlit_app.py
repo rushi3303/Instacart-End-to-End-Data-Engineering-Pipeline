@@ -385,57 +385,57 @@ if "last_executed_question" not in st.session_state:
 # =====================================================
 with st.sidebar:
     st.markdown("""
-    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
-        <span style="font-size: 24px;">⚡</span>
-        <div>
-            <div style="font-weight: 800; font-size: 16px; color: #FFFFFF; letter-spacing: -0.01em;">LAKEHOUSE COPILOT</div>
-            <div style="font-size: 11px; color: #64748B;">Instacart Analytics Platform</div>
-        </div>
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+    <span style="font-size: 24px;">⚡</span>
+    <div>
+        <div style="font-weight: 800; font-size: 16px; color: #FFFFFF; letter-spacing: -0.01em;">LAKEHOUSE COPILOT</div>
+        <div style="font-size: 11px; color: #64748B;">Instacart Analytics Platform</div>
     </div>
-    """, unsafe_allow_html=True)
+</div>
+""", unsafe_allow_html=True)
 
     # Live Health Indicators
     st.markdown("""
-    <div class="sidebar-header-box">
-        <div style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase; margin-bottom: 8px;">Pipeline Health</div>
-        <div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span style="color: #CBD5E1;">PostgreSQL DWH</span>
-                <span style="color: #10B981; font-weight: 600; display: flex; align-items: center; gap: 4px;">
-                    <span class="pulsing-dot"></span> LIVE :5432
-                </span>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span style="color: #CBD5E1;">Airflow DAG</span>
-                <span style="color: #10B981; font-weight: 600;">ACTIVE</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span style="color: #CBD5E1;">Records Ingested</span>
-                <span style="color: #6366F1; font-weight: 600;">279.9M+</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span style="color: #CBD5E1;">Medallion Status</span>
-                <span style="color: #10B981; font-weight: 600;">ALL PASSED</span>
-            </div>
+<div class="sidebar-header-box">
+    <div style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase; margin-bottom: 8px;">Pipeline Health</div>
+    <div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="color: #CBD5E1;">PostgreSQL DWH</span>
+            <span style="color: #10B981; font-weight: 600; display: flex; align-items: center; gap: 4px;">
+                <span class="pulsing-dot"></span> LIVE :5432
+            </span>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="color: #CBD5E1;">Airflow DAG</span>
+            <span style="color: #10B981; font-weight: 600;">ACTIVE</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="color: #CBD5E1;">Records Ingested</span>
+            <span style="color: #6366F1; font-weight: 600;">279.9M+</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="color: #CBD5E1;">Medallion Status</span>
+            <span style="color: #10B981; font-weight: 600;">ALL PASSED</span>
         </div>
     </div>
-    """, unsafe_allow_html=True)
+</div>
+""", unsafe_allow_html=True)
 
     st.markdown("##### 📚 Medallion Architecture")
     st.markdown("""
-    <div class="architecture-step">
-        <span style="color: #CD7F32; font-weight: 700;">🥉 Bronze</span>
-        <span>Raw Ingestion (CSV / Raw Logs)</span>
-    </div>
-    <div class="architecture-step">
-        <span style="color: #C0C0C0; font-weight: 700;">🥈 Silver</span>
-        <span>Cleaned, Deduplicated & SCD Type 2</span>
-    </div>
-    <div class="architecture-step">
-        <span style="color: #FFD700; font-weight: 700;">🥇 Gold</span>
-        <span>Star Schema & Aggregated Metrics</span>
-    </div>
-    """, unsafe_allow_html=True)
+<div class="architecture-step">
+    <span style="color: #CD7F32; font-weight: 700;">🥉 Bronze</span>
+    <span>Raw Ingestion (CSV / Raw Logs)</span>
+</div>
+<div class="architecture-step">
+    <span style="color: #C0C0C0; font-weight: 700;">🥈 Silver</span>
+    <span>Cleaned, Deduplicated & SCD Type 2</span>
+</div>
+<div class="architecture-step">
+    <span style="color: #FFD700; font-weight: 700;">🥇 Gold</span>
+    <span>Star Schema & Aggregated Metrics</span>
+</div>
+""", unsafe_allow_html=True)
 
     st.markdown("---")
     st.markdown("##### ⚡ Categorized Query Explorer")
@@ -525,10 +525,10 @@ query_box_col, voice_box_col = st.columns([3.2, 1.2], gap="medium")
 # The recognized text is stored in session_state before the text input is rendered.
 with voice_box_col:
     st.markdown("""
-    <div style="font-size: 13px; font-weight: 700; color: #CBD5E1; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-        <span>🎤</span> Speech-to-Text Input
-    </div>
-    """, unsafe_allow_html=True)
+<div style="font-size: 13px; font-weight: 700; color: #CBD5E1; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+    <span>🎤</span> Speech-to-Text Input
+</div>
+""", unsafe_allow_html=True)
 
     if HAS_MIC_RECORDER:
         try:
@@ -557,10 +557,10 @@ with query_box_col:
 
     # Quick Suggestion Chips
     st.markdown("""
-    <div style="font-size: 11px; font-weight: 600; color: #94A3B8; margin-top: 4px; margin-bottom: 2px;">
-        💡 Quick Suggestions:
-    </div>
-    """, unsafe_allow_html=True)
+<div style="font-size: 11px; font-weight: 600; color: #94A3B8; margin-top: 4px; margin-bottom: 2px;">
+    💡 Quick Suggestions:
+</div>
+""", unsafe_allow_html=True)
 
     chip_col1, chip_col2, chip_col3, chip_col4, chip_col5, chip_col6 = st.columns(6)
 
@@ -623,182 +623,182 @@ if st.session_state["last_executed_response"] is not None:
 
     # 1. Agentic AI Decision Header Pill
     st.markdown(f"""
-    <div class="decision-banner">
-        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <span style="font-size: 20px;">🎯</span>
-                <div>
-                    <span style="font-size: 11px; font-weight: 700; color: #818CF8; text-transform: uppercase; letter-spacing: 0.05em;">Autonomous Agent Decision</span>
-                    <div style="font-size: 15px; font-weight: 700; color: #FFFFFF;">
-                        Routed to Tool: <code style="background: rgba(99, 102, 241, 0.25); color: #A5B4FC; padding: 2px 8px; border-radius: 6px;">{intent}</code>
-                    </div>
+<div class="decision-banner">
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 20px;">🎯</span>
+            <div>
+                <span style="font-size: 11px; font-weight: 700; color: #818CF8; text-transform: uppercase; letter-spacing: 0.05em;">Autonomous Agent Decision</span>
+                <div style="font-size: 15px; font-weight: 700; color: #FFFFFF;">
+                    Routed to Tool: <code style="background: rgba(99, 102, 241, 0.25); color: #A5B4FC; padding: 2px 8px; border-radius: 6px;">{intent}</code>
                 </div>
             </div>
-            <div style="font-size: 13px; color: #CBD5E1; max-width: 600px;">
-                <span style="font-weight: 600; color: #94A3B8;">Reasoning:</span> {reasoning}
-            </div>
+        </div>
+        <div style="font-size: 13px; color: #CBD5E1; max-width: 600px;">
+            <span style="font-weight: 600; color: #94A3B8;">Reasoning:</span> {reasoning}
         </div>
     </div>
-    """, unsafe_allow_html=True)
+</div>
+""", unsafe_allow_html=True)
 
     # 2. Executive Metric Cards Bar
     if intent == "top_products" and raw_data:
         st.markdown(f"""
-        <div class="metric-grid">
-            <div class="metric-card-pro">
-                <div class="metric-label-pro">Top Item Orders</div>
-                <div class="metric-value-pro">{raw_data[0][2]:,}</div>
-                <div class="metric-sub-pro">🏆 {raw_data[0][1]}</div>
-            </div>
-            <div class="metric-card-pro">
-                <div class="metric-label-pro">Ranked Items</div>
-                <div class="metric-value-pro">{len(raw_data)} Products</div>
-                <div class="metric-sub-pro">📊 Gold Dim & Fact Layer</div>
-            </div>
-            <div class="metric-card-pro success">
-                <div class="metric-label-pro">Data Freshness</div>
-                <div class="metric-value-pro">Live PostgreSQL</div>
-                <div class="metric-sub-pro">⚡ 0 Latency Delta</div>
-            </div>
-            <div class="metric-card-pro">
-                <div class="metric-label-pro">Schema Layer</div>
-                <div class="metric-value-pro">Gold Mart</div>
-                <div class="metric-sub-pro">🥇 Aggregated Star Schema</div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+<div class="metric-grid">
+    <div class="metric-card-pro">
+        <div class="metric-label-pro">Top Item Orders</div>
+        <div class="metric-value-pro">{raw_data[0][2]:,}</div>
+        <div class="metric-sub-pro">🏆 {raw_data[0][1]}</div>
+    </div>
+    <div class="metric-card-pro">
+        <div class="metric-label-pro">Ranked Items</div>
+        <div class="metric-value-pro">{len(raw_data)} Products</div>
+        <div class="metric-sub-pro">📊 Gold Dim & Fact Layer</div>
+    </div>
+    <div class="metric-card-pro success">
+        <div class="metric-label-pro">Data Freshness</div>
+        <div class="metric-value-pro">Live PostgreSQL</div>
+        <div class="metric-sub-pro">⚡ 0 Latency Delta</div>
+    </div>
+    <div class="metric-card-pro">
+        <div class="metric-label-pro">Schema Layer</div>
+        <div class="metric-value-pro">Gold Mart</div>
+        <div class="metric-sub-pro">🥇 Aggregated Star Schema</div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
     elif intent == "sales_summary" and raw_data:
         total_items = sum(d[1] for d in raw_data)
         total_orders = sum(d[2] for d in raw_data)
         st.markdown(f"""
-        <div class="metric-grid">
-            <div class="metric-card-pro">
-                <div class="metric-label-pro">Total Products Sold</div>
-                <div class="metric-value-pro">{total_items:,}</div>
-                <div class="metric-sub-pro">📦 Across all depts</div>
-            </div>
-            <div class="metric-card-pro">
-                <div class="metric-label-pro">Total Orders Placed</div>
-                <div class="metric-value-pro">{total_orders:,}</div>
-                <div class="metric-sub-pro">🛒 Unique Transactions</div>
-            </div>
-            <div class="metric-card-pro">
-                <div class="metric-label-pro">Active Departments</div>
-                <div class="metric-value-pro">{len(raw_data)} Depts</div>
-                <div class="metric-sub-pro">🏢 Full Catalog Coverage</div>
-            </div>
-            <div class="metric-card-pro success">
-                <div class="metric-label-pro">Reporting Status</div>
-                <div class="metric-value-pro">Verified</div>
-                <div class="metric-sub-pro">✅ Silver-Gold Reconciled</div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+<div class="metric-grid">
+    <div class="metric-card-pro">
+        <div class="metric-label-pro">Total Products Sold</div>
+        <div class="metric-value-pro">{total_items:,}</div>
+        <div class="metric-sub-pro">📦 Across all depts</div>
+    </div>
+    <div class="metric-card-pro">
+        <div class="metric-label-pro">Total Orders Placed</div>
+        <div class="metric-value-pro">{total_orders:,}</div>
+        <div class="metric-sub-pro">🛒 Unique Transactions</div>
+    </div>
+    <div class="metric-card-pro">
+        <div class="metric-label-pro">Active Departments</div>
+        <div class="metric-value-pro">{len(raw_data)} Depts</div>
+        <div class="metric-sub-pro">🏢 Full Catalog Coverage</div>
+    </div>
+    <div class="metric-card-pro success">
+        <div class="metric-label-pro">Reporting Status</div>
+        <div class="metric-value-pro">Verified</div>
+        <div class="metric-sub-pro">✅ Silver-Gold Reconciled</div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
     elif intent == "customer_summary" and raw_data:
         st.markdown(f"""
-        <div class="metric-grid">
-            <div class="metric-card-pro">
-                <div class="metric-label-pro">Top Customer Orders</div>
-                <div class="metric-value-pro">{raw_data[0][1]} Orders</div>
-                <div class="metric-sub-pro">👤 User ID #{raw_data[0][0]}</div>
-            </div>
-            <div class="metric-card-pro">
-                <div class="metric-label-pro">Analyzed Cohort</div>
-                <div class="metric-value-pro">{len(raw_data)} VIPs</div>
-                <div class="metric-sub-pro">💎 Highest Repeat Ratio</div>
-            </div>
-            <div class="metric-card-pro success">
-                <div class="metric-label-pro">Retention Tier</div>
-                <div class="metric-value-pro">High Loyalty</div>
-                <div class="metric-sub-pro">🌟 Repeat Buyer Segment</div>
-            </div>
-            <div class="metric-card-pro">
-                <div class="metric-label-pro">Source Dimension</div>
-                <div class="metric-value-pro">dim_users</div>
-                <div class="metric-sub-pro">🥇 Gold Dimension Table</div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+<div class="metric-grid">
+    <div class="metric-card-pro">
+        <div class="metric-label-pro">Top Customer Orders</div>
+        <div class="metric-value-pro">{raw_data[0][1]} Orders</div>
+        <div class="metric-sub-pro">👤 User ID #{raw_data[0][0]}</div>
+    </div>
+    <div class="metric-card-pro">
+        <div class="metric-label-pro">Top Customers Analyzed</div>
+        <div class="metric-value-pro">{len(raw_data)} Customers</div>
+        <div class="metric-sub-pro">💎 Highest Order Frequency</div>
+    </div>
+    <div class="metric-card-pro success">
+        <div class="metric-label-pro">Order Frequency</div>
+        <div class="metric-value-pro">{raw_data[0][1]} Orders</div>
+        <div class="metric-sub-pro">🌟 Most Active Customer</div>
+    </div>
+    <div class="metric-card-pro">
+        <div class="metric-label-pro">Source Table</div>
+        <div class="metric-value-pro">customer_summary</div>
+        <div class="metric-sub-pro">🏅 Gold Summary Table</div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
     elif intent in ["etl_status", "etl_history"]:
         st.markdown("""
-        <div class="metric-grid">
-            <div class="metric-card-pro success">
-                <div class="metric-label-pro">Pipeline Execution</div>
-                <div class="metric-value-pro">SUCCESS</div>
-                <div class="metric-sub-pro">🟢 Airflow Exit Code 0</div>
-            </div>
-            <div class="metric-card-pro">
-                <div class="metric-label-pro">Total Processed Records</div>
-                <div class="metric-value-pro">279,921,756</div>
-                <div class="metric-sub-pro">📈 Multi-Run Cumulative</div>
-            </div>
-            <div class="metric-card-pro">
-                <div class="metric-label-pro">Tables Ingested</div>
-                <div class="metric-value-pro">10 Tables</div>
-                <div class="metric-sub-pro">🥉 Bronze + 🥈 Silver + 🥇 Gold</div>
-            </div>
-            <div class="metric-card-pro">
-                <div class="metric-label-pro">Execution Duration</div>
-                <div class="metric-value-pro">301s</div>
-                <div class="metric-sub-pro">⚡ Optimized Batch</div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+<div class="metric-grid">
+    <div class="metric-card-pro success">
+        <div class="metric-label-pro">Pipeline Execution</div>
+        <div class="metric-value-pro">SUCCESS</div>
+        <div class="metric-sub-pro">🟢 Airflow Exit Code 0</div>
+    </div>
+    <div class="metric-card-pro">
+        <div class="metric-label-pro">Total Processed Records</div>
+        <div class="metric-value-pro">279,921,756</div>
+        <div class="metric-sub-pro">📈 Multi-Run Cumulative</div>
+    </div>
+    <div class="metric-card-pro">
+        <div class="metric-label-pro">Tables Ingested</div>
+        <div class="metric-value-pro">10 Tables</div>
+        <div class="metric-sub-pro">🥉 Bronze + 🥈 Silver + 🥇 Gold</div>
+    </div>
+    <div class="metric-card-pro">
+        <div class="metric-label-pro">Execution Duration</div>
+        <div class="metric-value-pro">301s</div>
+        <div class="metric-sub-pro">⚡ Optimized Batch</div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
     elif intent == "data_quality":
         st.markdown("""
-        <div class="metric-grid">
-            <div class="metric-card-pro success">
-                <div class="metric-label-pro">Data Quality Check</div>
-                <div class="metric-value-pro">ALL PASSED</div>
-                <div class="metric-sub-pro">🛡️ 0 Integrity Violations</div>
-            </div>
-            <div class="metric-card-pro">
-                <div class="metric-label-pro">Bronze Validation</div>
-                <div class="metric-value-pro">6 Files OK</div>
-                <div class="metric-sub-pro">✅ Schema & Header Verified</div>
-            </div>
-            <div class="metric-card-pro">
-                <div class="metric-label-pro">Silver Deduplication</div>
-                <div class="metric-value-pro">6 Tables OK</div>
-                <div class="metric-sub-pro">✅ 0 Duplicate Keys</div>
-            </div>
-            <div class="metric-card-pro">
-                <div class="metric-label-pro">Rejected Quarantine</div>
-                <div class="metric-value-pro">0 Rows</div>
-                <div class="metric-sub-pro">✨ Clean Ingestion</div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+<div class="metric-grid">
+    <div class="metric-card-pro success">
+        <div class="metric-label-pro">Data Quality Check</div>
+        <div class="metric-value-pro">ALL PASSED</div>
+        <div class="metric-sub-pro">🛡️ 0 Integrity Violations</div>
+    </div>
+    <div class="metric-card-pro">
+        <div class="metric-label-pro">Bronze Validation</div>
+        <div class="metric-value-pro">6 Files OK</div>
+        <div class="metric-sub-pro">✅ Schema & Header Verified</div>
+    </div>
+    <div class="metric-card-pro">
+        <div class="metric-label-pro">Silver Deduplication</div>
+        <div class="metric-value-pro">6 Tables OK</div>
+        <div class="metric-sub-pro">✅ 0 Duplicate Keys</div>
+    </div>
+    <div class="metric-card-pro">
+        <div class="metric-label-pro">Rejected Quarantine</div>
+        <div class="metric-value-pro">0 Rows</div>
+        <div class="metric-sub-pro">✨ Clean Ingestion</div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
     else:
         st.markdown(f"""
-        <div class="metric-grid">
-            <div class="metric-card-pro">
-                <div class="metric-label-pro">Query Domain</div>
-                <div class="metric-value-pro">{intent.upper()}</div>
-                <div class="metric-sub-pro">🔍 Semantic Routing</div>
-            </div>
-            <div class="metric-card-pro success">
-                <div class="metric-label-pro">Agent Response</div>
-                <div class="metric-value-pro">200 OK</div>
-                <div class="metric-sub-pro">⚡ Execution Verified</div>
-            </div>
-            <div class="metric-card-pro">
-                <div class="metric-label-pro">Knowledge Engine</div>
-                <div class="metric-value-pro">RAG + SQL</div>
-                <div class="metric-sub-pro">🧠 Hybrid Retrieval</div>
-            </div>
-            <div class="metric-card-pro">
-                <div class="metric-label-pro">Report Readiness</div>
-                <div class="metric-value-pro">Ready</div>
-                <div class="metric-sub-pro">📄 PDF & TXT Available</div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+<div class="metric-grid">
+    <div class="metric-card-pro">
+        <div class="metric-label-pro">Query Domain</div>
+        <div class="metric-value-pro">{intent.upper()}</div>
+        <div class="metric-sub-pro">🔍 Semantic Routing</div>
+    </div>
+    <div class="metric-card-pro success">
+        <div class="metric-label-pro">Agent Response</div>
+        <div class="metric-value-pro">200 OK</div>
+        <div class="metric-sub-pro">⚡ Execution Verified</div>
+    </div>
+    <div class="metric-card-pro">
+        <div class="metric-label-pro">Knowledge Engine</div>
+        <div class="metric-value-pro">RAG + SQL</div>
+        <div class="metric-sub-pro">🧠 Hybrid Retrieval</div>
+    </div>
+    <div class="metric-card-pro">
+        <div class="metric-label-pro">Report Readiness</div>
+        <div class="metric-value-pro">Ready</div>
+        <div class="metric-sub-pro">📄 PDF & TXT Available</div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
     # =====================================================
     # Organized Multi-Tab Executive Presentation
@@ -848,10 +848,10 @@ if st.session_state["last_executed_response"] is not None:
 
             else:
                 st.markdown(f"""
-                <div style="background: rgba(15, 23, 42, 0.6); padding: 18px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.08); font-family: monospace; font-size: 13px; color: #E2E8F0; white-space: pre-wrap; line-height: 1.6;">
+<div style="background: rgba(15, 23, 42, 0.6); padding: 18px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.08); font-family: monospace; font-size: 13px; color: #E2E8F0; white-space: pre-wrap; line-height: 1.6;">
 {formatted_text}
-                </div>
-                """, unsafe_allow_html=True)
+</div>
+""", unsafe_allow_html=True)
 
             # Modern Voice Playback Widget
             st.markdown("<div style='margin-top: 14px;'></div>", unsafe_allow_html=True)
@@ -1012,7 +1012,7 @@ if st.session_state["last_executed_response"] is not None:
                         color="Total Orders",
                         color_continuous_scale=["#3B82F6", "#6366F1", "#EC4899"]
                     )
-                    apply_dark_theme(fig, "High-Value Customer Order Frequency")
+                    apply_dark_theme(fig, "Top Customer Order Frequency")
                     st.plotly_chart(fig, use_container_width=True)
 
                 elif intent in ["etl_history", "etl_status"]:
@@ -1049,11 +1049,11 @@ if st.session_state["last_executed_response"] is not None:
             if insights:
                 for ins in insights:
                     st.markdown(f"""
-                    <div class="insight-card-pro">
-                        <span style="font-size: 18px; line-height: 1;">💡</span>
-                        <div>{ins}</div>
-                    </div>
-                    """, unsafe_allow_html=True)
+<div class="insight-card-pro">
+    <span style="font-size: 18px; line-height: 1;">💡</span>
+    <div>{ins}</div>
+</div>
+""", unsafe_allow_html=True)
             else:
                 st.info("No anomalies or specific data insights detected for this query domain.")
 
@@ -1062,11 +1062,11 @@ if st.session_state["last_executed_response"] is not None:
             if actions:
                 for act in actions:
                     st.markdown(f"""
-                    <div class="action-card-pro">
-                        <span style="font-size: 18px; line-height: 1;">🎯</span>
-                        <div>{act}</div>
-                    </div>
-                    """, unsafe_allow_html=True)
+<div class="action-card-pro">
+    <span style="font-size: 18px; line-height: 1;">🎯</span>
+    <div>{act}</div>
+</div>
+""", unsafe_allow_html=True)
             else:
                 st.info("No urgent pipeline remediation needed.")
 
@@ -1075,33 +1075,33 @@ if st.session_state["last_executed_response"] is not None:
 
         if chart_info:
 
-            chart_type = chart_info.get(  
+            chart_type = chart_info.get(
                 "chart_type",
                 "Recommended visualization"
             )
 
-            reasoning = chart_info.get(
+            advisor_reasoning = chart_info.get(
                 "reasoning",
                 "This visualization was selected based on the available data and query requirements."
             )
 
             st.markdown(f"""
-            <div class="advisor-card">
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
-                    <div style="font-weight: 700; font-size: 15px; color: #FFFFFF; display: flex; align-items: center; gap: 8px;">
-                        <span>🧠</span> Power BI & Visual Analytics Advisor
-                    </div>
+<div class="advisor-card">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+        <div style="font-weight: 700; font-size: 15px; color: #FFFFFF; display: flex; align-items: center; gap: 8px;">
+            <span>🧠</span> Power BI & Visual Analytics Advisor
+        </div>
 
-                    <span class="badge-pill" style="background: rgba(139, 92, 246, 0.2); color: #C4B5FD; border: 1px solid rgba(139, 92, 246, 0.4);">
-                        Recommended: {chart_type}
-                    </span>
-                </div>
+        <span class="badge-pill" style="background: rgba(139, 92, 246, 0.2); color: #C4B5FD; border: 1px solid rgba(139, 92, 246, 0.4);">
+            Recommended: {chart_type}
+        </span>
+    </div>
 
-                <div style="font-size: 13px; color: #CBD5E1; line-height: 1.6;">
-                    <strong>Why this visual is recommended:</strong> {reasoning}
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+    <div style="font-size: 13px; color: #CBD5E1; line-height: 1.6;">
+        <strong>Why this visual is recommended:</strong> {advisor_reasoning}
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
         else:
 
@@ -1119,71 +1119,94 @@ if st.session_state["last_executed_response"] is not None:
 
         with col_med1:
             st.markdown("""
-            <div class="glass-card" style="border-top: 4px solid #CD7F32;">
-                <div style="font-weight: 700; font-size: 14px; color: #CD7F32; margin-bottom: 6px;">🥉 BRONZE LAYER (RAW)</div>
-                <div style="font-size: 12px; color: #94A3B8; margin-bottom: 10px;">Ingestion & Raw Staging</div>
-                <div style="font-size: 12px; color: #E2E8F0; line-height: 1.6;">
-                    • 6 Source CSV Files Ingested<br/>
-                    • Schema & Header Validation: PASSED<br/>
-                    • Quarantine Quarantine Rate: 0.00%<br/>
-                    • Target: <code>raw_stage</code> schemas
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+<div class="glass-card" style="border-top: 4px solid #CD7F32;">
+    <div style="font-weight: 700; font-size: 14px; color: #CD7F32; margin-bottom: 6px;">🥉 BRONZE LAYER (RAW)</div>
+    <div style="font-size: 12px; color: #94A3B8; margin-bottom: 10px;">Ingestion & Raw Staging</div>
+    <div style="font-size: 12px; color: #E2E8F0; line-height: 1.6;">
+        • 6 Source CSV Files Ingested<br/>
+        • Schema & Header Validation: PASSED<br/>
+        • Quarantine Rate: 0.00%<br/>
+        • Target: <code>raw_stage</code> schemas
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
         with col_med2:
             st.markdown("""
-            <div class="glass-card" style="border-top: 4px solid #C0C0C0;">
-                <div style="font-weight: 700; font-size: 14px; color: #E2E8F0; margin-bottom: 6px;">🥈 SILVER LAYER (CLEANED)</div>
-                <div style="font-size: 12px; color: #94A3B8; margin-bottom: 10px;">Deduplication & SCD Type 2</div>
-                <div style="font-size: 12px; color: #E2E8F0; line-height: 1.6;">
-                    • 6 Silver Tables Cleaned<br/>
-                    • Deduplication & Null Check: PASSED<br/>
-                    • SCD Type 2 Product Tracking: ACTIVE<br/>
-                    • Target: <code>silver_instacart</code>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+<div class="glass-card" style="border-top: 4px solid #C0C0C0;">
+    <div style="font-weight: 700; font-size: 14px; color: #E2E8F0; margin-bottom: 6px;">🥈 SILVER LAYER (CLEANED)</div>
+    <div style="font-size: 12px; color: #94A3B8; margin-bottom: 10px;">Deduplication & SCD Type 2</div>
+    <div style="font-size: 12px; color: #E2E8F0; line-height: 1.6;">
+        • 6 Silver Tables Cleaned<br/>
+        • Deduplication & Null Check: PASSED<br/>
+        • SCD Type 2 Product Tracking: ACTIVE<br/>
+        • Target: <code>silver_instacart</code>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
         with col_med3:
             st.markdown("""
-            <div class="glass-card" style="border-top: 4px solid #FFD700;">
-                <div style="font-weight: 700; font-size: 14px; color: #FFD700; margin-bottom: 6px;">🥇 GOLD LAYER (ANALYTICS)</div>
-                <div style="font-size: 12px; color: #94A3B8; margin-bottom: 10px;">Star Schema & Aggregations</div>
-                <div style="font-size: 12px; color: #E2E8F0; line-height: 1.6;">
-                    • 4 Star Schema Dimensions & Facts<br/>
-                    • <code>fact_order_products</code> & <code>dim_users</code><br/>
-                    • Power BI Direct Lake Ready: YES<br/>
-                    • Target: <code>gold_analytics</code>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+<div class="glass-card" style="border-top: 4px solid #FFD700;">
+    <div style="font-weight: 700; font-size: 14px; color: #FFD700; margin-bottom: 6px;">🥇 GOLD LAYER (ANALYTICS)</div>
+    <div style="font-size: 12px; color: #94A3B8; margin-bottom: 10px;">Star Schema & Aggregations</div>
+    <div style="font-size: 12px; color: #E2E8F0; line-height: 1.6;">
+        • 4 Star Schema Dimensions & Facts<br/>
+        • <code>fact_order_products</code> & <code>dim_users</code><br/>
+        • Power BI Direct Lake Ready: YES<br/>
+        • Target: <code>gold_analytics</code>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
         # Airflow DAG Flow
         st.markdown("##### ⚙️ Airflow Execution DAG Details")
         st.markdown("""
-        <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 16px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <span style="font-weight: 600; color: #F8FAFC;">DAG: <code>instacart_etl_pipeline</code></span>
-                <span class="badge-pill badge-live"><span class="pulsing-dot"></span> State: SUCCESS</span>
-            </div>
-            <div style="font-family: monospace; font-size: 12px; color: #38BDF8; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px;">
-                start_pipeline ➔ ingest_bronze_task ➔ validate_and_clean_silver_task ➔ scd_type2_transform_task ➔ build_gold_star_schema_task ➔ generate_data_quality_report ➔ end_pipeline
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+<div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 16px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <span style="font-weight: 600; color: #F8FAFC;">DAG: <code>instacart_etl_pipeline</code></span>
+        <span class="badge-pill badge-live"><span class="pulsing-dot"></span> State: SUCCESS</span>
+    </div>
+    <div style="font-family: monospace; font-size: 12px; color: #38BDF8; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px;">
+        start_pipeline ➔ ingest_bronze_task ➔ validate_and_clean_silver_task ➔ scd_type2_transform_task ➔ build_gold_star_schema_task ➔ generate_data_quality_report ➔ end_pipeline
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
     # -----------------------------------------------------
     # TAB 4: Executive Reports & Exports
     # -----------------------------------------------------
     with tab_reports:
         st.markdown("#### 📄 Executive Report Generation")
-        st.markdown("Download automated pipeline diagnostic and business intelligence summaries generated by the autonomous agent.")
+        st.markdown(
+            "Download automated pipeline diagnostic and business intelligence "
+            "summaries generated by the autonomous agent."
+        )
 
-        rep_txt_bytes = create_txt_bytes(report_data.get("full_text", formatted_text))
-        rep_pdf_bytes = create_pdf_bytes(report_data)
+        # =====================================================
+        # Report Metadata
+        # =====================================================
+        report_data = dict(report_data)
 
-        col_dl1, col_dl2, col_preview = st.columns([1, 1, 2], gap="medium")
+        report_data["question"] = query_text
+        report_data["generated_timestamp"] = pd.Timestamp.now().strftime(
+            "%Y-%m-%d %H:%M:%S"
+        )
+        report_data["selected_tool"] = intent
+        report_data["reasoning"] = reasoning
+
+        rep_txt_bytes = create_txt_bytes(
+            report_data.get("full_text", formatted_text)
+        )
+
+        rep_pdf_bytes = create_pdf_bytes(
+            report_data
+        )
+
+        col_dl1, col_dl2, col_preview = st.columns(
+            [1, 1, 2],
+            gap="medium"
+        )
 
         with col_dl1:
             st.download_button(
@@ -1205,29 +1228,41 @@ if st.session_state["last_executed_response"] is not None:
             )
 
         with col_preview:
-            st.markdown("""
-            <div style="font-size: 12px; color: #94A3B8;">
-                🔒 Reports include cryptographic timestamp, agent execution path, intent reasoning, and business insights generated according to ISO-compliant enterprise reporting standards.
-            </div>
-            """, unsafe_allow_html=True)
+            st.markdown(
+                """
+                <div style="font-size: 12px; color: #94A3B8;">
+                    🔒 Reports include cryptographic timestamp, agent execution
+                    path, intent reasoning, and business insights generated
+                    according to ISO-compliant enterprise reporting standards.
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
         st.markdown("---")
-        with st.expander("👁️ Preview Full Report Text", expanded=False):
-            st.code(report_data.get("full_text", formatted_text), language="markdown")
+
+        with st.expander(
+            "👁️ Preview Full Report Text",
+            expanded=False
+        ):
+            st.code(
+                report_data.get("full_text", formatted_text),
+                language="markdown"
+            )
 
 else:
     # Empty State Hero Card
     st.markdown("""
-    <div style="text-align: center; padding: 40px 20px; background: rgba(15, 23, 42, 0.4); border: 1px dashed rgba(255, 255, 255, 0.1); border-radius: 16px; margin-top: 20px;">
-        <span style="font-size: 48px; display: block; margin-bottom: 12px;">⚡</span>
-        <h3 style="color: #F8FAFC; margin-bottom: 8px; font-weight: 700;">Ready to Analyze Your Lakehouse Pipeline</h3>
-        <p style="color: #94A3B8; max-width: 600px; margin: 0 auto 20px auto; font-size: 14px;">
-            Ask a business analytics question, check Airflow task executions, verify Medallion data quality, or track SCD Type 2 dimension histories.
-        </p>
-        <div style="display: inline-flex; gap: 8px; font-size: 12px; color: #64748B;">
-            <span>💡 Try: "Show top 5 products"</span> • 
-            <span>"Did my pipeline succeed?"</span> • 
-            <span>"Show sales by department"</span>
-        </div>
+<div style="text-align: center; padding: 40px 20px; background: rgba(15, 23, 42, 0.4); border: 1px dashed rgba(255, 255, 255, 0.1); border-radius: 16px; margin-top: 20px;">
+    <span style="font-size: 48px; display: block; margin-bottom: 12px;">⚡</span>
+    <h3 style="color: #F8FAFC; margin-bottom: 8px; font-weight: 700;">Ready to Analyze Your Lakehouse Pipeline</h3>
+    <p style="color: #94A3B8; max-width: 600px; margin: 0 auto 20px auto; font-size: 14px;">
+        Ask a business analytics question, check Airflow task executions, verify Medallion data quality, or track SCD Type 2 dimension histories.
+    </p>
+    <div style="display: inline-flex; gap: 8px; font-size: 12px; color: #64748B;">
+        <span>💡 Try: "Show top 5 products"</span> •
+        <span>"Did my pipeline succeed?"</span> •
+        <span>"Show sales by department"</span>
     </div>
-    """, unsafe_allow_html=True)
+</div>
+""", unsafe_allow_html=True)

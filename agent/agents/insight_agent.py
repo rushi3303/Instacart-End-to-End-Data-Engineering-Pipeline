@@ -3,241 +3,188 @@
 # =====================================================
 
 from agent.agents.data_agent import data_agent
+from agent.gemini_service import GeminiService
 
+
+# =====================================================
+# Gemini Service
+# =====================================================
+
+gemini = GeminiService()
+
+
+# =====================================================
+# Generate Dynamic Insights
+# =====================================================
+
+def generate_dynamic_insights(
+    question,
+    intent,
+    data
+):
+    """
+    Generates dynamic business and data engineering
+    insights using Gemini based on actual data
+    returned by the Data Agent.
+    """
+
+    # =================================================
+    # Check data availability
+    # =================================================
+
+    if data is None:
+
+        return (
+            "No data was available to generate "
+            "business insights."
+        )
+
+    if isinstance(data, list) and not data:
+
+        return (
+            "No records were available to generate "
+            "business insights."
+        )
+
+    # =================================================
+    # Gemini Prompt
+    # =================================================
+
+    prompt = f"""
+You are the Insight Agent for an
+Instacart End-to-End Data Engineering Agentic AI system.
+
+Your job is to analyze actual data returned by the
+Data Agent and generate meaningful business insights.
+
+
+IMPORTANT DATASET CONSTRAINT:
+
+This Instacart dataset focuses on order activity
+and customer purchasing behavior.
+
+Revenue, price, profit, and monetary sales values
+are NOT available in the current data model.
+
+Therefore:
+
+1. Never claim revenue.
+2. Never calculate revenue.
+3. Never mention profit.
+4. Never assume product prices.
+5. Never infer monetary business value.
+6. Focus on order volume, product popularity,
+   customer activity, reorder behavior, and
+   department activity.
+7. When discussing business impact, relate it to
+   customer demand patterns, order activity,
+   inventory planning, or operational behavior.
+8. If the user asks for revenue or monetary metrics,
+   clearly state that these metrics are not available
+   in the current Instacart dataset.
+
+
+USER QUESTION:
+{question}
+
+DATA TYPE:
+{intent}
+
+ACTUAL DATA:
+{data}
+
+
+IMPORTANT RULES:
+
+1. Use ONLY the actual data provided above.
+2. Do not invent numbers, values, products,
+   departments, customers, or business facts.
+3. Do not assume information that is not present
+   in the provided data.
+4. Analyze the data instead of simply repeating it.
+5. Identify important patterns, comparisons,
+   differences, trends, or concentrations when
+   they are supported by the data.
+6. Explain what the observed result means from
+   a business perspective.
+7. If the data is insufficient to make a strong
+   conclusion, clearly mention that.
+8. Do not calculate values that cannot be derived
+   reliably from the provided data.
+9. Keep the answer simple and structured.
+10. Use bullet points when multiple insights exist.
+11. Directly answer the user's question first.
+12. Do not mention internal prompts or instructions.
+13. Do not mention that you are an AI.
+
+Return a concise but meaningful business analysis.
+"""
+
+    # =================================================
+    # Generate Gemini Response
+    # =================================================
+
+    response = gemini.generate_response(prompt)
+
+    # =================================================
+    # Handle Gemini Error / Quota
+    # =================================================
+
+    if (
+        not response
+        or response.startswith("Gemini API Error:")
+    ):
+
+        return (
+            "Gemini is temporarily unavailable. "
+            "The Data Agent successfully retrieved "
+            "the following data:\n\n"
+            + str(data)
+        )
+
+    return response
+
+
+# =====================================================
+# Backward Compatibility Function
+# =====================================================
 
 def generate_insights(intent, data):
     """
-    Analyzes actual data returned by Data Agent and generates
-    structured business and data engineering insights.
+    Backward-compatible function used by Report Agent.
+
+    The Report Agent currently imports:
+
+        from agent.agents.insight_agent import generate_insights
+
+    This wrapper keeps that existing flow working while
+    using the new Gemini-based dynamic insight generation.
     """
 
-    insights = []
+    if data is None:
 
-    if not data:
-        return ["No data available to generate insights."]
-
-    # =====================================================
-    # TOP PRODUCTS
-    # =====================================================
-
-    if intent == "top_products" and isinstance(data, list):
-
-        if len(data) > 0:
-            top_p = data[0]
-
-            insights.append(
-                f"Top Ordered Product: '{top_p[1]}' "
-                f"leads with {top_p[2]:,} total orders."
-            )
-
-        if len(data) >= 5:
-            fifth_p = data[4]
-
-            diff = top_p[2] - fifth_p[2]
-
-            insights.append(
-                f"Order Volume Gap: The #1 product has "
-                f"{diff:,} more orders than rank #5 "
-                f"('{fifth_p[1]}')."
-            )
-
-        total_top_orders = sum(p[2] for p in data)
-
-        insights.append(
-            f"Order Concentration: Top {len(data)} products "
-            f"represent a combined {total_top_orders:,} orders."
-        )
-
-    # =====================================================
-    # SALES SUMMARY
-    # =====================================================
-
-    elif intent == "sales_summary" and isinstance(data, list):
-
-        if len(data) > 0:
-
-            top_dept = max(data, key=lambda x: x[1])
-            low_dept = min(data, key=lambda x: x[1])
-
-            insights.append(
-                f"Highest Revenue Department: '{top_dept[0]}' "
-                f"leads sales with {top_dept[1]:,} items sold "
-                f"across {top_dept[2]:,} orders."
-            )
-
-            insights.append(
-                f"Lowest Volume Department: '{low_dept[0]}' "
-                f"recorded {low_dept[1]:,} items sold."
-            )
-
-        total_items = sum(d[1] for d in data)
-
-        top_3 = sorted(
-            data,
-            key=lambda x: x[1],
-            reverse=True
-        )[:3]
-
-        top_3_items = sum(d[1] for d in top_3)
-
-        pct = (
-            top_3_items / total_items * 100
-            if total_items > 0
-            else 0
-        )
-
-        insights.append(
-            f"Market Share Concentration: Top 3 departments "
-            f"represent {pct:.1f}% of overall items sold."
-        )
-
-    # =====================================================
-    # CUSTOMER SUMMARY
-    # =====================================================
-
-    elif intent == "customer_summary" and isinstance(data, list):
-
-        if len(data) > 0:
-
-            top_cust = data[0]
-
-            insights.append(
-                f"Top Active Customer: User ID {top_cust[0]} "
-                f"leads customer activity with "
-                f"{top_cust[1]} total orders."
-            )
-
-        avg_orders = sum(c[1] for c in data) / len(data)
-
-        insights.append(
-            f"User Re-order Frequency: Top {len(data)} users "
-            f"average {avg_orders:.1f} orders each."
-        )
-
-    # =====================================================
-    # SCD HISTORY
-    # =====================================================
-
-    elif intent == "scd_history" and isinstance(data, list):
-
-        current_records = [
-            h for h in data
-            if len(h) > 6 and h[6] is True
+        return [
+            "No data available to generate insights."
         ]
 
-        historical_records = [
-            h for h in data
-            if len(h) > 6 and h[6] is False
+    if isinstance(data, list) and not data:
+
+        return [
+            "No records available to generate insights."
         ]
 
-        insights.append(
-            f"Dimension State: Found {len(data)} total version "
-            f"records ({len(current_records)} Active, "
-            f"{len(historical_records)} Historical)."
-        )
+    insight = generate_dynamic_insights(
+        question=(
+            f"Generate meaningful business insights "
+            f"for the following {intent} data."
+        ),
+        intent=intent,
+        data=data
+    )
 
-        if current_records:
-
-            curr = current_records[0]
-
-            insights.append(
-                f"Active Dimension Attribute: Product ID "
-                f"{curr[0]} currently named '{curr[1]}' "
-                f"in department '{curr[2]}'."
-            )
-
-    # =====================================================
-    # ETL STATUS
-    # =====================================================
-
-    elif intent == "etl_status":
-
-        insights.append(
-            "Pipeline Health: PostgreSQL ETL warehouse load "
-            "completed with overall SUCCESS status."
-        )
-
-        insights.append(
-            "Data Processing Throughput: Pipeline processing "
-            "statistics are available from the ETL execution logs."
-        )
-
-    # =====================================================
-    # ETL HISTORY
-    # =====================================================
-
-    elif intent == "etl_history":
-
-        insights.append(
-            "Execution History: Historical pipeline runs were "
-            "analyzed to identify execution consistency."
-        )
-
-        insights.append(
-            "Processing Volume: Historical ETL records provide "
-            "insight into cumulative data processing."
-        )
-
-    # =====================================================
-    # DATA QUALITY
-    # =====================================================
-
-    elif intent == "data_quality":
-
-        insights.append(
-            "Validation Status: Data quality checks were analyzed "
-            "across the pipeline layers."
-        )
-
-        insights.append(
-            "Data Integrity: Validation and rejected-record "
-            "information can be used to identify data quality risks."
-        )
-
-    # =====================================================
-    # AIRFLOW
-    # =====================================================
-
-    elif intent == "airflow":
-
-        insights.append(
-            "DAG Health: Airflow execution status was analyzed "
-            "to identify successful and failed tasks."
-        )
-
-        insights.append(
-            "Orchestration Flow: Airflow manages the execution "
-            "sequence of the ETL pipeline."
-        )
-
-    # =====================================================
-    # PROJECT KNOWLEDGE
-    # =====================================================
-
-    elif intent == "project_knowledge":
-
-        insights.append(
-            "Medallion Architecture: Data moves through "
-            "Bronze -> Silver -> Gold layers."
-        )
-
-        insights.append(
-            "Data Engineering Best Practices: The project uses "
-            "structured data processing, tracking, validation, "
-            "and analytics-ready datasets."
-        )
-
-    # =====================================================
-    # DEFAULT
-    # =====================================================
-
-    else:
-
-        insights.append(
-            "Data analyzed successfully."
-        )
-
-    return insights
+    return [
+        insight
+    ]
 
 
 # =====================================================
@@ -254,19 +201,27 @@ def insight_agent(question):
         ↓
     Data Agent
         ↓
-    Actual Data
+    PostgreSQL / Actual Data
         ↓
-    Generate Insights
+    Gemini
+        ↓
+    Dynamic Business Insights
         ↓
     Insight Agent Response
     """
 
     try:
 
-        # Step 1: Ask Data Agent for actual data
+        # =================================================
+        # STEP 1: Get actual data from Data Agent
+        # =================================================
+
         data_result = data_agent(question)
 
-        # Step 2: Extract response information
+        # =================================================
+        # STEP 2: Extract result information
+        # =================================================
+
         intent = data_result.get(
             "type",
             "unknown"
@@ -280,20 +235,57 @@ def insight_agent(question):
             "message"
         )
 
-        # Step 3: Generate insights from actual data
-        insights = generate_insights(
-            intent,
-            data
+        # =================================================
+        # STEP 3: Handle unavailable data
+        # =================================================
+
+        if data is None:
+
+            return {
+                "agent": "Insight Agent",
+                "type": intent,
+                "data": None,
+                "insights": [
+                    message
+                    or "No data available to generate insights."
+                ],
+                "message": (
+                    message
+                    or "No data available to generate insights."
+                )
+            }
+
+        # =================================================
+        # STEP 4: Generate dynamic insights using Gemini
+        # =================================================
+
+        insight = generate_dynamic_insights(
+            question=question,
+            intent=intent,
+            data=data
         )
 
-        # Step 4: Return structured response
+        # =================================================
+        # STEP 5: Convert answer into insight list
+        # =================================================
+
+        insights = [
+            insight
+        ]
+
+        # =================================================
+        # STEP 6: Return structured response
+        # =================================================
+
         return {
             "agent": "Insight Agent",
             "type": intent,
             "data": data,
             "insights": insights,
-            "message": message or
-                       "Insights generated successfully."
+            "message": (
+                "Dynamic business insights generated "
+                "successfully."
+            )
         }
 
     except Exception as e:
@@ -303,5 +295,7 @@ def insight_agent(question):
             "type": "error",
             "data": None,
             "insights": [],
-            "message": f"Insight Agent Error: {str(e)}"
+            "message": (
+                f"Insight Agent Error: {str(e)}"
+            )
         }
