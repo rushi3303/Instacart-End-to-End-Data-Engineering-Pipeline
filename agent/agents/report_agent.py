@@ -7,88 +7,137 @@ from agent.agents.insight_agent import generate_insights
 from agent.agents.action_agent import generate_actions
 
 
-def create_report(intent, data):
+# =====================================================
+# Create Complete Report
+# =====================================================
+
+def create_report(data):
     """
-    Creates a structured report using:
+    Creates a complete business report using:
 
     1. Actual data from Data Agent
     2. Insights from Insight Agent
-    3. Actions from Action Agent
+    3. Recommended actions from Action Agent
     """
 
-    insights = generate_insights(intent, data)
+    # Generate insights from collected data
+    insights = generate_insights(
+        "summary_report",
+        data
+    )
 
-    actions = generate_actions(intent, data)
+    # Generate recommended actions
+    actions = generate_actions(
+        "summary_report",
+        data
+    )
 
-    report = {
-        "title": f"{intent.replace('_', ' ').title()} Report",
+    return {
+        "title": "Instacart Business Summary Report",
         "data": data,
         "insights": insights,
         "recommended_actions": actions
     }
 
-    return report
 
+# =====================================================
+# REPORT AGENT
+# =====================================================
 
 def report_agent(query):
     """
-    Report Agent:
+    Report Agent workflow:
 
-    User Question
-        ↓
-    Data Agent
-        ↓
-    Actual Data
-        ↓
-    Insight Agent
-        ↓
-    Action Agent
-        ↓
-    Complete Report
+        User Question
+             ↓
+        Report Agent
+             ↓
+        Data Agent
+             ↓
+        Multiple Data Sources
+             ↓
+        Insight Agent
+             ↓
+        Action Agent
+             ↓
+        Complete Report
     """
 
     try:
 
-        # Step 1: Get actual data
-        data_result = data_agent(query)
+        # =================================================
+        # STEP 1: Collect Top Products
+        # =================================================
 
-        intent = data_result.get(
-            "type",
-            "unknown"
+        products_result = data_agent(
+            "Show me the top 5 products by order count."
         )
 
-        data = data_result.get(
-            "data"
+        # =================================================
+        # STEP 2: Collect Sales Summary
+        # =================================================
+
+        sales_result = data_agent(
+            "Show me department sales."
         )
 
-        # Step 2: Handle unknown request
-        if intent == "unknown":
+        # =================================================
+        # STEP 3: Collect Customer Summary
+        # =================================================
 
-            return {
-                "agent": "Report Agent",
-                "type": "unknown",
-                "data": None,
-                "report": None,
-                "message": (
-                    "Sorry, I could not identify "
-                    "the data required for the report."
-                )
-            }
+        customer_result = data_agent(
+            "Show me the most active customers based on order frequency."
+        )
 
-        # Step 3: Generate complete report
+        # =================================================
+        # STEP 4: Collect ETL Status
+        # =================================================
+
+        etl_result = data_agent(
+            "Show me the ETL status."
+        )
+
+        # =================================================
+        # STEP 5: Combine Data
+        # =================================================
+
+        combined_data = {
+            "top_products": products_result.get(
+                "data"
+            ),
+
+            "sales_summary": sales_result.get(
+                "data"
+            ),
+
+            "customer_summary": customer_result.get(
+                "data"
+            ),
+
+            "etl_status": etl_result.get(
+                "data"
+            )
+        }
+
+        # =================================================
+        # STEP 6: Create Complete Report
+        # =================================================
+
         report = create_report(
-            intent,
-            data
+            combined_data
         )
 
-        # Step 4: Return report
+        # =================================================
+        # STEP 7: Return Result
+        # =================================================
+
         return {
             "agent": "Report Agent",
-            "type": intent,
-            "data": data,
+            "type": "summary_report",
+            "data": combined_data,
             "report": report,
             "message": (
-                "Report generated successfully."
+                "Summary report generated successfully."
             )
         }
 
